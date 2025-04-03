@@ -25,21 +25,33 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text(
                       "Login To Your\nAccount", 
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(height: 10),
                     Row(
                       children: [
                         Container(
                           width: 80, // Panjang garis biru
                           height: 4, // Ketebalan garis
-                          color: Colors.blue, // Warna garis
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(2),
+                              bottomLeft: Radius.circular(2),
+                            )
+                          ),
                         ),
                         SizedBox(width: 4), // Jarak ke titik kecil
                         Container(
-                          width: 8, // Ukuran titik kecil
+                          width: 10, // Ukuran titik kecil
                           height: 4,
-                          color: Colors.blue,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(2),
+                              bottomRight: Radius.circular(2),
+                            )
+                          ),
                         ),
                       ],
                     ),
@@ -48,22 +60,42 @@ class _LoginPageState extends State<LoginPage> {
                 Expanded(child: Text(''))
               ],
             ),
+            SizedBox(height: 40),
             SizedBox(
               child: TextField(
-                decoration: const InputDecoration(
-                  label: Text("UserName / Email")
+                decoration: InputDecoration(
+                  label: Text("Username"),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
                 ),
               ),
             ),
+            SizedBox(height: 30),
             SizedBox(
               child: TextField(
-                decoration: const InputDecoration(
+                obscureText: true,
+                decoration: InputDecoration(
                   label: Text("Password"),
-                  prefixIcon: Icon(Icons.visibility),
-                  suffixIcon: Icon(Icons.visibility),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  prefixIcon: Icon(Icons.lock, size: 20,), 
+                  suffixIcon: Icon(Icons.visibility, size: 20,), // Icon Kanan
                 ),
               ),
             ),
+            SizedBox(height: 30),
             Row(
               children: [
                 Checkbox(
@@ -74,12 +106,74 @@ class _LoginPageState extends State<LoginPage> {
                     });
                   },
                 ),
-                Text("Remember Me")
+                Text("Remember Me"),
+                Expanded(child: Text('')),
+                Text("Forgot Password ?")
               ],
             ),
-            ElevatedButton(onPressed: (){}, child: Text("Login")),
-            Text("OR"),
-            TextButton(onPressed: () {}, child: Text("INI GOOGLE")),
+            SizedBox(height: 40,),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 50, // Atur tinggi tombol
+                    child: ElevatedButton(
+                      onPressed: () {}, 
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.blue),
+                        foregroundColor: MaterialStateProperty.all(Colors.white),
+                        padding: MaterialStateProperty.all(EdgeInsets.all(10)),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      child: Text("Login"),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20,),
+            Row(children: [
+              Expanded(child: Container(
+                height: 1,
+                color: Colors.grey,
+              ),),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15), // Beri jarak pada teks
+                child: Text("OR"),
+              ),
+              Expanded(child: Container(
+                height: 1,
+                color: Colors.grey,
+              ),)
+            ],),
+            SizedBox(height: 20,),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+              IconButton(onPressed: (){}, icon: SizedBox(
+                width: 35,
+                height: 35,
+                child: Image.network("https://img.icons8.com/?size=100&id=17949&format=png&color=000000"),
+              ),),
+              IconButton(onPressed: (){}, icon: SizedBox(
+                width: 35,
+                height: 35,
+                child: Image.network("https://img.icons8.com/?size=100&id=17949&format=png&color=000000"),
+              ),),
+              IconButton(onPressed: (){}, icon: SizedBox(
+                width: 35,
+                height: 35,
+                child: Image.network("https://img.icons8.com/?size=100&id=17949&format=png&color=000000"),
+              ),),
+              IconButton(onPressed: (){}, icon: SizedBox(
+                width: 35,
+                height: 35,
+                child: Image.network("https://img.icons8.com/?size=100&id=17949&format=png&color=000000"),
+              ),),
+            ],),
+            
             Expanded(child: Text("")),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +182,6 @@ class _LoginPageState extends State<LoginPage> {
                 TextButton(onPressed: () => {}, child: Text("Register"))
               ],
             ),
-            Expanded(child: Text(""),)
           ],
         ),
       )
