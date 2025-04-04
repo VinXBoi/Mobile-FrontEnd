@@ -1,5 +1,5 @@
-import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
+import 'package:activity_tracker/LoginPage/register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -73,6 +73,9 @@ class _LoginPageState extends State<LoginPage> {
                     borderSide: BorderSide(color: Colors.blue),
                     borderRadius: BorderRadius.circular(8)
                   ),
+                  prefixIcon : Icon(Icons.home, size: 20,),
+                  // filled: true,
+                  // fillColor: Colors.lightBlue[200]
                 ),
               ),
             ),
@@ -108,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Text("Remember Me"),
                 Expanded(child: Text('')),
-                Text("Forgot Password ?")
+                TextButton(onPressed: () => {}, child: Text("Forgot Password ?"))
               ],
             ),
             SizedBox(height: 40,),
@@ -120,10 +123,10 @@ class _LoginPageState extends State<LoginPage> {
                     child: ElevatedButton(
                       onPressed: () {}, 
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue),
-                        foregroundColor: MaterialStateProperty.all(Colors.white),
-                        padding: MaterialStateProperty.all(EdgeInsets.all(10)),
-                        shape: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(Colors.blue),
+                        foregroundColor: WidgetStateProperty.all(Colors.white),
+                        padding: WidgetStateProperty.all(EdgeInsets.all(10)),
+                        shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -179,7 +182,11 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Don't Have an Account?"),
-                TextButton(onPressed: () => {}, child: Text("Register"))
+                TextButton(onPressed: () {
+                  Navigator.push(context, 
+                    MaterialPageRoute(builder: (context) => RegisterPage())
+                  );
+                }, child: Text("Register"))
               ],
             ),
           ],
