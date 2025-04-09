@@ -10,6 +10,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool isChecked = false;
+  bool obscurePw = true;
+  List <Widget> iconEye = [Icon(Icons.visibility), Icon(Icons.visibility_off)];
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _pwController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 40),
             SizedBox(
               child: TextField(
+                controller: _usernameController,
                 decoration: InputDecoration(
                   label: Text("Username"),
                   enabledBorder: OutlineInputBorder(
@@ -82,7 +88,8 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 30),
             SizedBox(
               child: TextField(
-                obscureText: true,
+                controller: _pwController,
+                obscureText: obscurePw,
                 decoration: InputDecoration(
                   label: Text("Password"),
                   enabledBorder: OutlineInputBorder(
@@ -94,7 +101,11 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(8)
                   ),
                   prefixIcon: Icon(Icons.lock, size: 20,), 
-                  suffixIcon: Icon(Icons.visibility, size: 20,), // Icon Kanan
+                  suffixIcon: IconButton(onPressed:() {
+                    setState(() {
+                      obscurePw = !obscurePw;
+                    });
+                  }, icon: iconEye[obscurePw ? 1 : 0], iconSize: 20,), // Icon Kanan
                 ),
               ),
             ),
@@ -103,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Checkbox(
                   value: isChecked,
-                  onChanged: (bool? newValue) {
+                  onChanged: (newValue) {
                     setState(() {
                       isChecked = newValue!;
                     });
