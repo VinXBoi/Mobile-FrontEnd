@@ -1,16 +1,35 @@
-# activity_tracker
+# 📊 Activity Tracker
 
-A new Flutter project.
+**Activity Tracker** adalah aplikasi yang dirancang untuk membantu pelajar memantau, mencatat, dan mengelola tugas.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 👥 Tim Pengembang
 
-A few resources to get you started if this is your first Flutter project:
+- **Alvin Dinata**
+- **Vera Nataria**
+- **Teresia Hana Agatha Siburian**
+- **Wilmer Tanton**
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 Fitur Utama
+
+- Pencatatan aktivitas harian
+- Pencatatan list mata pelajaran
+- Reminder/Notifikasi tugas / ujian
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+- Flutter
+- GitHub (versi kontrol)
+
+---
+
+## 📦 Cara Menjalankan Proyek
+
+1. Clone repository ini:
+   ```bash
+   git clone https://github.com/VinXBoi/Mobile-FrontEnd.git
