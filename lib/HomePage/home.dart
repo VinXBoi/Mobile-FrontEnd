@@ -27,7 +27,7 @@ class _HomepageState extends State<Homepage> {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  "Nama Akun Teresia",
+                  "Teresia",
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ),
@@ -43,15 +43,22 @@ class _HomepageState extends State<Homepage> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(right:8),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width*0.35,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Pencarian',
-                      ),
+                  child: 
+                    SizedBox(
+                      width: 
+                        MediaQuery.of(context).size.width*0.35,
+                          child: 
+                            TextField(
+                              decoration: 
+                                InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: 
+                                    OutlineInputBorder(),
+                                      hintText: 'Pencarian',
+                                ),
+                            ),
                     ),
-                  ),
                 ),
 
                 Padding(padding: EdgeInsets.only(right: 20), 
@@ -150,7 +157,7 @@ class _HomepageState extends State<Homepage> {
                             ),
                             child: 
                               Row( 
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
@@ -158,31 +165,37 @@ class _HomepageState extends State<Homepage> {
                                       Text(
                                         // size:20,
                                           "Judul Dashboard ${index + 1}",
-                                          style: TextStyle(color: Colors.red, fontSize: MediaQuery.of(context).size.width*0.020)
+                                          style: TextStyle(color: Colors.black, fontSize: MediaQuery.of(context).size.width*0.035)
                                       ),
                                   ),
                                   
                                   SizedBox(
                                     child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      // mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         IconButton(
+                                          // padding: EdgeInsets.zero,
+                                          // constraints: BoxConstraints(),
                                           icon: 
                                             Icon(
                                               Icons.menu,
-                                              color: Colors.red,
-                                              size: MediaQuery.of(context).size.width * 0.03,  
+                                              color: Colors.black,
+                                              size: MediaQuery.of(context).size.width * 0.05,  
                                           ),
                                           onPressed: (){
                                           }, 
                                         ),
                                         
                                         IconButton(
+                                          // constraints: BoxConstraints(),
+                                          // padding: EdgeInsets.zero,
                                           onPressed: () {
                                           },
                                           icon: 
                                             Icon( Icons.add,
-                                              color: Colors.red,
-                                              size: MediaQuery.of(context).size.width * 0.03,  
+                                              color: Colors.black,
+                                              size: MediaQuery.of(context).size.width * 0.05,  
                                           ),
                                         )
                                       ],
