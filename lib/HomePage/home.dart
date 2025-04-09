@@ -22,7 +22,7 @@ class _HomepageState extends State<Homepage> {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: AssetImage("assets/ayangCylus.jpg"),
+                backgroundImage: AssetImage("assets/tes.jpg"),
               ),
               SizedBox(width: 8),
               Expanded(
@@ -134,7 +134,7 @@ class _HomepageState extends State<Homepage> {
                           image: 
                             DecorationImage(
                               image: 
-                                AssetImage("assets/ayangCylus.jpg"),
+                                AssetImage("assets/tes.jpg"),
                                 fit: BoxFit.cover,
                             ),
                           borderRadius: BorderRadius.circular(8),
