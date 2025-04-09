@@ -1,6 +1,6 @@
 # 📊 Activity Tracker
 
-**Activity Tracker** adalah aplikasi yang dirancang untuk membantu pelajar memantau, mencatat, dan mengelola tugas.
+**Activity Tracker** adalah aplikasi yang dirancang untuk membantu pelajar memantau, mencatat, dan mengelola tugas .
 
 ---
 
@@ -15,9 +15,11 @@
 
 ## 🚀 Fitur Utama
 
-- Pencatatan aktivitas harian
-- Pencatatan list mata pelajaran
-- Reminder/Notifikasi tugas / ujian
+- Menampilkan list mata kuliah
+- Mengelompokkan tugas berdasarkan status: **To Do**, **In Progress**, dan **Done**
+- Mengelompokkan tugas berdasarkan **mata kuliah**
+- Menampilkan tugas-tugas di tampilan **kalender akademik**
+- Memberikan notifikasi atau pengingat menjelang deadline
 
 ---
 
