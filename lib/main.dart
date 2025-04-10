@@ -1,4 +1,9 @@
+<<<<<<< Updated upstream
 import 'package:activity_tracker/LoginPage/login.dart';
+=======
+import 'package:activity_tracker/HomePage/home.dart';
+// import 'package:activity_tracker/LoginPage/login.dart';
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 void main() {
