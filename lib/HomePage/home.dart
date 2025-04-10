@@ -12,7 +12,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
         toolbarHeight: 70,
         leadingWidth: 700,
         leading: Padding(
