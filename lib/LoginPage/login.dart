@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:activity_tracker/LoginPage/register.dart';
+import 'package:activity_tracker/HomePage/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -126,7 +127,11 @@ class _LoginPageState extends State<LoginPage> {
                   child: SizedBox(
                     height: 50, // Atur tinggi tombol
                     child: ElevatedButton(
-                      onPressed: () {}, 
+                      onPressed: () {
+                        Navigator.push(context, 
+                          MaterialPageRoute(builder: (context) => Homepage())
+                        );
+                      }, 
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(Colors.blue),
                         foregroundColor: WidgetStateProperty.all(Colors.white),
