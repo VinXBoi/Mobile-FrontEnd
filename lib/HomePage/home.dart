@@ -12,7 +12,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
         toolbarHeight: 70,
         leadingWidth: 700,
         leading: Padding(
@@ -38,7 +38,7 @@ class _HomepageState extends State<Homepage> {
         //APPBAR KANAN
         actions: [
           Padding(
-            padding: EdgeInsets.only(left: 0, top: 8, right: 10, bottom: 8),
+            padding: EdgeInsets.only(left: 0, top: 8, right:3, bottom: 8),
             child: Wrap(
               children: [
                 Padding(
@@ -51,17 +51,23 @@ class _HomepageState extends State<Homepage> {
                             TextField(
                               decoration: 
                                 InputDecoration(
+                                  enabledBorder: 
+                                    OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(90),
+                                      borderSide: BorderSide(color: Colors.blue)
+                                    ),
+                                  
                                   filled: true,
                                   fillColor: Colors.white,
-                                  border: 
-                                    OutlineInputBorder(),
+                                  // border: 
+                                  //   OutlineInputBorder(),
                                       hintText: 'Pencarian',
                                 ),
                             ),
                     ),
                 ),
 
-                Padding(padding: EdgeInsets.only(right: 20), 
+                Padding(padding: EdgeInsets.only(right: MediaQuery.of(context).size.width*0.000), 
                   child: 
                     Center(
                     child: IconButton(
@@ -80,7 +86,6 @@ class _HomepageState extends State<Homepage> {
       //BODY
       body: Column(
         children: [
-          
           SizedBox(height: 20),
           Row(
             children: [
@@ -112,7 +117,7 @@ class _HomepageState extends State<Homepage> {
           //INI DASHBOARDNYA
           
 
-
+        
           
           Expanded(
             child: 
@@ -121,7 +126,7 @@ class _HomepageState extends State<Homepage> {
                 EdgeInsets.only(
                   top: MediaQuery.of(context).size.height*0.03, 
                   left: MediaQuery.of(context).size.width*0.01,
-                  right: MediaQuery.of(context).size.width*0.010,
+                  // right: MediaQuery.of(context).size.width*0.0,
                                 // bottom: MediaQuery.of(context).size.height*0.1
               ), 
               child: 
@@ -135,7 +140,8 @@ class _HomepageState extends State<Homepage> {
                     ),
                   itemCount: 2,
                   itemBuilder: (context, index) {
-                    return DecoratedBox(
+                    return 
+                    DecoratedBox(
                       decoration: 
                         BoxDecoration(
                           image: 
@@ -215,7 +221,7 @@ class _HomepageState extends State<Homepage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: Colors.deepPurple,
+        // backgroundColor: Colors.deepPurple,
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
