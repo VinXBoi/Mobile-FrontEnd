@@ -11,26 +11,29 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        toolbarHeight: 70,
-        leadingWidth: 700,
-        leading: Padding(
-          padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.01),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: AssetImage("assets/tes.jpg"),
-              ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  "Teresia",
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+      appBar: 
+        AppBar(
+          backgroundColor: Colors.blue,
+          toolbarHeight: 70,
+          leadingWidth: 700,
+          leading: Padding(
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+          child: 
+            Row(
+              // mainAxisSize: MainAxisSize.min,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  radius: 23,
+                  backgroundImage: AssetImage("assets/tes.jpg"),
                 ),
-              ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "Teresia",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
             ],
           ),
         ),
@@ -38,87 +41,86 @@ class _HomepageState extends State<Homepage> {
         //APPBAR KANAN
         actions: [
           Padding(
-            padding: EdgeInsets.only(left: 0, top: 8, right:3, bottom: 8),
-            child: Wrap(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right:8),
-                  child: 
-                    SizedBox(
-                      width: 
-                        MediaQuery.of(context).size.width*0.35,
-                          child: 
-                            TextField(
-                              decoration: 
-                                InputDecoration(
-                                  enabledBorder: 
-                                    OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(90),
-                                      borderSide: BorderSide(color: Colors.blue)
-                                    ),
-                                  
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  // border: 
-                                  //   OutlineInputBorder(),
-                                      hintText: 'Pencarian',
-                                ),
-                            ),
-                    ),
-                ),
-
-                Padding(padding: EdgeInsets.only(right: MediaQuery.of(context).size.width*0.000), 
-                  child: 
-                    Center(
-                    child: IconButton(
-                      icon: Icon(Icons.search),
-                      onPressed: () {},
-                    ),
+            padding: EdgeInsets.only(right:3),
+            child: 
+              Row(
+                children: [
+                  //Supaya gak overflow
+                  Container(
+                    width: 
+                      MediaQuery.of(context).size.width*0.35,
+                    height: 43,
+                        child: 
+                          TextField(
+                            maxLines: 1,//supaya cuma bisa ngisi satu bar
+                            decoration: 
+                              InputDecoration(
+                                contentPadding: 
+                                  EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                enabledBorder: 
+                                  OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(90),
+                                    borderSide: BorderSide(color: Colors.blue)
+                                  ),
+                                filled: true,
+                                fillColor: Colors.white,
+                                hintText: 'Pencarian',
+                              ),
+                          ),
                   ),
-                )
-                
-              ],
+                  SizedBox(width:2),
+                  Padding(
+                    padding: EdgeInsets.only(right: 3), 
+                    child: 
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {},
+                      ),
+                    // ),
+                  )
+                  
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
       ),
 
       //BODY
-      body: Column(
-        children: [
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.01),
-                child: Wrap(
-                  spacing: 8,
+      body: 
+        Padding(
+          padding: EdgeInsets.only(right:10, left: 10),//BALIK
+          child: 
+            Column(
+              children: [
+                SizedBox(height: 10),
+                Row(
                   children: [
-                    //INI KATEGORI
-                    Chip(
-                      label: const Text('Kategori'),
-                      avatar: CircleAvatar(
-                        backgroundColor: Colors.grey.shade800,
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.01),
+                      Row(
+                        spacing: 10,
+                        children: [
+                          //INI KATEGORI
+                          Chip(
+                            label: const Text('Kategori'),
+                            avatar: CircleAvatar(
+                              backgroundColor: Colors.grey.shade800,
+                            ),
+                          ),
+                          Chip(
+                            label: const Text('Favorit'),
+                            avatar: CircleAvatar(
+                              backgroundColor: Colors.grey.shade800,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Chip(
-                      label: const Text('Favorit'),
-                      avatar: CircleAvatar(
-                        backgroundColor: Colors.grey.shade800,
-                      ),
-                    ),
+                    // ),
                   ],
                 ),
-              ),
-            ],
-          ),
 
 
           //INI DASHBOARDNYA
-          
-
-        
-          
           Expanded(
             child: 
             Container(
@@ -126,9 +128,7 @@ class _HomepageState extends State<Homepage> {
                 EdgeInsets.only(
                   top: MediaQuery.of(context).size.height*0.03, 
                   left: MediaQuery.of(context).size.width*0.01,
-                  // right: MediaQuery.of(context).size.width*0.0,
-                                // bottom: MediaQuery.of(context).size.height*0.1
-              ), 
+                ), 
               child: 
                 GridView.builder(
                   gridDelegate: 
@@ -138,57 +138,62 @@ class _HomepageState extends State<Homepage> {
                       crossAxisSpacing: 10,
                       childAspectRatio: 5,
                     ),
-                  itemCount: 2,
+                  itemCount: 10,
                   itemBuilder: (context, index) {
                     return 
                     Container(
+                      
                       decoration: 
                         BoxDecoration(
+                          border: Border.all(color: Colors.black, width:1),
                           image: 
                             DecorationImage(
                               image: 
                                 AssetImage("assets/tes.jpg"),
+                                opacity: 0.3,
                                 fit: BoxFit.cover,
                             ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: 
+                            BorderRadius.circular(8),
+                          
                         ),
                         child: 
                           Padding(
                             padding: 
-                            EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width*0.01,
-                              right: MediaQuery.of(context).size.width*0.01,
-                              top: MediaQuery.of(context).size.height*0.03,
-                              
-                            ),
+                              EdgeInsets.only(
+                                left: MediaQuery.of(context).size.width*0.01,
+                                right: MediaQuery.of(context).size.width*0.01,
+                                top: MediaQuery.of(context).size.height*0.01,
+                              ),
                             child: 
+
+                              //BAGIAN JUDUL
                               Row( 
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(
-                                    child: 
+                                  // SizedBox(
+                                  //   child: 
                                       Text(
-                                        // size:20,
                                           "Judul Dashboard ${index + 1}",
                                           style: TextStyle(color: Colors.black, fontSize: MediaQuery.of(context).size.width*0.035)
                                       ),
-                                  ),
-                                  
-                                  SizedBox(
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      // mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        IconButton(
+                                      Expanded(child: Text("")),
+                                      IconButton(
+
                                           // padding: EdgeInsets.zero,
                                           // constraints: BoxConstraints(),
+                                          
                                           icon: 
-                                            Icon(
+                                            SizedBox(
+                                              // height: 0,
+                                              child:
+                                                Icon(
                                               Icons.menu,
                                               color: Colors.black,
                                               size: MediaQuery.of(context).size.width * 0.05,  
                                           ),
+                                            ),
+                                            
                                           onPressed: (){
                                           }, 
                                         ),
@@ -203,10 +208,19 @@ class _HomepageState extends State<Homepage> {
                                               color: Colors.black,
                                               size: MediaQuery.of(context).size.width * 0.05,  
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                        ),
+                                  // ),
+                                  
+                                  // SizedBox(
+                                  //   child: 
+                                    // Row(
+                                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                                    //   // mainAxisAlignment: MainAxisAlignment.start,
+                                    //   children: [
+                                        
+                                    //   ],
+                                    // ),
+                                  // ),
                             ],
                           )
                         ),
@@ -219,6 +233,10 @@ class _HomepageState extends State<Homepage> {
 
         ],
       ),
+          
+          
+        ),
+        
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         // backgroundColor: Colors.deepPurple,
