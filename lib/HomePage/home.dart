@@ -88,7 +88,7 @@ class _HomepageState extends State<Homepage> {
       //BODY
       body: 
         Padding(
-          padding: EdgeInsets.only(right:10, left: 10),//BALIK
+          padding: EdgeInsets.only(right:10, left: 6),//BALIK
           child: 
             Column(
               children: [
