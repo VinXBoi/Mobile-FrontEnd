@@ -39,7 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     Row(
                       children: [
                         Container(
-                          width: 80, // Panjang garis biru
+                          width: 100, // Panjang garis biru
                           height: 4, // Ketebalan garis
                           decoration: BoxDecoration(
                             color: Colors.blue,
@@ -51,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         SizedBox(width: 4), // Jarak ke titik kecil
                         Container(
-                          width: 10, // Ukuran titik kecil
+                          width: 12, // Ukuran titik kecil
                           height: 4,
                           decoration: BoxDecoration(
                             color: Colors.blue,
@@ -149,7 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     setState(() {
                       obscurePwc = !obscurePwc;
                     });
-                  }, icon: iconEye[obscurePwc ? 1 : 0]), // Icon Kanan
+                  }, icon: iconEye[obscurePwc ? 1 : 0], iconSize: 20,), // Icon Kanan
                 ),
               ),
             ),

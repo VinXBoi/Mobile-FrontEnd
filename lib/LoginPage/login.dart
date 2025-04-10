@@ -22,47 +22,41 @@ class _LoginPageState extends State<LoginPage> {
         child : Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Text(
+                  "Login To Your\nAccount", 
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                ),
+                SizedBox(height: 10),
+                Row(
                   children: [
-                    Text(
-                      "Login To Your\nAccount", 
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                    Container(
+                      width: 100, // Panjang garis biru
+                      height: 4, // Ketebalan garis
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(2),
+                          bottomLeft: Radius.circular(2),
+                        )
+                      ),
                     ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Container(
-                          width: 80, // Panjang garis biru
-                          height: 4, // Ketebalan garis
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(2),
-                              bottomLeft: Radius.circular(2),
-                            )
-                          ),
-                        ),
-                        SizedBox(width: 4), // Jarak ke titik kecil
-                        Container(
-                          width: 10, // Ukuran titik kecil
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(2),
-                              bottomRight: Radius.circular(2),
-                            )
-                          ),
-                        ),
-                      ],
+                    SizedBox(width: 4), // Jarak ke titik kecil
+                    Container(
+                      width: 12, // Ukuran titik kecil
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(2),
+                          bottomRight: Radius.circular(2),
+                        )
+                      ),
                     ),
                   ],
                 ),
-                Expanded(child: Text(''))
               ],
             ),
             SizedBox(height: 40),
@@ -103,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                   prefixIcon: Icon(Icons.lock, size: 20,), 
                   suffixIcon: IconButton(onPressed:() {
                     setState(() {
-                      obscurePw = !obscurePw;
+                      obscurePw = !obscurePw; 
                     });
                   }, icon: iconEye[obscurePw ? 1 : 0], iconSize: 20,), // Icon Kanan
                 ),
@@ -116,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                   value: isChecked,
                   onChanged: (newValue) {
                     setState(() {
-                      isChecked = newValue!;
+                      isChecked = newValue!; 
                     });
                   },
                 ),
@@ -136,7 +130,6 @@ class _LoginPageState extends State<LoginPage> {
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(Colors.blue),
                         foregroundColor: WidgetStateProperty.all(Colors.white),
-                        padding: WidgetStateProperty.all(EdgeInsets.all(10)),
                         shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
