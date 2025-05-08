@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => Homepage())
+                          MaterialPageRoute(builder: (context) => HomePage())
                         );
                       }, 
                       style: ButtonStyle(
