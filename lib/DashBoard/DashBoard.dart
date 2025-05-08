@@ -69,7 +69,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+                  const Divider(thickness: 1, height: 24),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: const [
@@ -83,6 +83,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       ),
                     ],
                   ),
+                  const Divider(thickness: 1, height: 24),
                   const SizedBox(height: 16),
 
                   TextField(
@@ -164,13 +165,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     'Current draft',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
+                  const Divider(thickness: 1, height: 24),
                   const SizedBox(height: 8),
                   const Text(
                     'Use the page below as your working document.',
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   const SizedBox(height: 16),
-
                   Card(
                     child: ListTile(
                       leading: const Icon(Icons.insert_drive_file, color: Colors.green),
@@ -180,11 +181,12 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     ),
                   ),
                   const SizedBox(height: 24),
-
+                  const Divider(thickness: 1, height: 24),
                   const Text(
                     'Plan',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
+                  const Divider(thickness: 1, height: 24),
                   const SizedBox(height: 4),
                   const Text(
                     'Break down your paper or thesis into milestones with target dates.',
@@ -269,12 +271,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 ),
 
                 const SizedBox(height: 16),
-
-                const Text(
+                const Divider(thickness: 1, height: 24),
+                const Text( 
                   'Quick Add',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                  const SizedBox(height: 4),
+                const Divider(thickness: 1, height: 24),
+                const SizedBox(height: 4),
                 Column(
                 children: [
                   Row(
@@ -291,7 +294,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      Expanded(child: Text(''),),
                       ElevatedButton.icon(
                         onPressed: () {
                         },
@@ -322,7 +325,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const Expanded(child: Text(''),),
                       ElevatedButton.icon(
                         onPressed: () {
                         },
