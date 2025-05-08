@@ -1,4 +1,4 @@
-import 'package:activity_tracker/HomePage/home.dart';
+import 'package:activity_tracker/DashBoard/DashBoard.dart';
 import 'package:activity_tracker/LoginPage/login.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      home: const LoginPage(),
-
+      home: LoginPage(),
     );
   }
 }

@@ -192,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Text("Don't Have an Account?"),
                 TextButton(onPressed: () {
-                  Navigator.push(context, 
+                  Navigator.pushReplacement(context, 
                     MaterialPageRoute(builder: (context) => RegisterPage())
                   );
                 }, child: Text("Register"))

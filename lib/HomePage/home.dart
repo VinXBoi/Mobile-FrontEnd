@@ -1,3 +1,4 @@
+import 'package:activity_tracker/DashBoard/DashBoard.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,6 +9,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   final List<Map<String, dynamic>> cards = [
     {
       'title': 'Class Notes',
@@ -60,6 +62,7 @@ class _HomePageState extends State<HomePage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue[100],
         elevation: 1,
         titleSpacing: 0,
@@ -153,64 +156,66 @@ class _HomePageState extends State<HomePage> {
                         itemCount: cards.length,
                         itemBuilder: (context, index) {
                           final card = cards[index];
-                          return Container(
-                            width: 160,
-                            margin: EdgeInsets.only(right: 12),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                image: NetworkImage(card['imageUrl']),
-                                fit: BoxFit.cover,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+                            },
+                            child: Container(
+                              width: 160,
+                              margin: EdgeInsets.only(right: 12),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                image: DecorationImage(
+                                  image: NetworkImage(card['imageUrl']),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                            child: Stack(
-                              children: [
-                                // Gradient overlay
-                                
-  
-
-
-                                Positioned.fill(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.transparent,
-                                          Colors.black.withOpacity(0.7),
-                                        ],
+                              child: Stack(
+                                children: [
+                                  // Gradient overlay
+                                  Positioned.fill(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.black.withOpacity(0.7),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                // Title and icon
-                                Positioned(
-                                  left: 12,
-                                  bottom: 12,
-                                  right: 12,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Icon(card['icon'], size: 20, color: Colors.white),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        card['title'],
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
+                                  // Title and icon
+                                  Positioned(
+                                    left: 12,
+                                    bottom: 12,
+                                    right: 12,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Icon(card['icon'], size: 20, color: Colors.white),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          card['title'],
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                            )
                           );
+                          
                         },
                       ),
                     ),
@@ -250,45 +255,51 @@ class _HomePageState extends State<HomePage> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final item = items[index];
-                          return Container(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade300,
-                                  blurRadius: 6,
-                                  offset: Offset(0, 2),
-                                )
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.arrow_right, color: theme.primaryColor),
-                                SizedBox(width: 10),
-                                Icon(item['icon'], color: Colors.black),
-                                SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    item['title'],
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 15,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade300,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 2),
+                                  )
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.arrow_right, color: theme.primaryColor),
+                                  SizedBox(width: 10),
+                                  Icon(item['icon'], color: Colors.black),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      item['title'],
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 15,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.more_vert, color: Colors.grey[800]),
-                                  onPressed: () {
-                                    
-                                  },
-                                ),
-                                IconButton(onPressed:(){}, icon:Icon(Icons.add, color: Colors.lightBlue), ),
-                              ],
-                            ),
+                                  IconButton(
+                                    icon: Icon(Icons.more_vert, color: Colors.grey[800]),
+                                    onPressed: () {
+                                      
+                                    },
+                                  ),
+                                  IconButton(onPressed:(){}, icon:Icon(Icons.add, color: Colors.lightBlue), ),
+                                ],
+                              ),
+                            )
                           );
+                          
                         },
                         childCount: items.length,
                       ),
@@ -301,7 +312,20 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(onPressed: (){}, 
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        setState(() {
+          cards.add(
+            {
+              'title': 'Class Notes',
+              'icon': Icons.edit,
+              'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+            },
+          );
+          items.add(
+            {'icon': Icons.edit, 'title': '${items.length + 1}'},
+          );
+        });
+      }, 
         child: Icon(Icons.add),
         
       ),
@@ -317,8 +341,10 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(icon: Icon(Icons.settings, color: Colors.blue), onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+              }),
               IconButton(icon: Icon(Icons.home, color: Colors.blue), onPressed: () {}),
-              IconButton(icon: Icon(Icons.note_alt_outlined, color: Colors.blue), onPressed: () {}),
               IconButton(icon: Icon(Icons.email, color: Colors.blue), onPressed: () {}),
             ],
           ),
