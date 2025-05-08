@@ -1,3 +1,4 @@
+import 'package:activity_tracker/DashBoard/Newpage.dart';
 import 'package:flutter/material.dart';
 import 'package:activity_tracker/DashBoard/kanban.dart';
 
@@ -353,6 +354,11 @@ class _DashBoardPageState extends State<DashBoardPage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.pushReplacement(context, 
+          MaterialPageRoute(builder: (context) => Newpage())
+        );
+      }, child: Icon(Icons.add),),
     );
   }
 }
