@@ -120,7 +120,7 @@ class _NewpageState extends State<Newpage> {
                 Text(":", style: TextStyle(fontWeight: FontWeight.w600)),
 
                 // Spacer agar "Empty" geser ke kanan
-                SizedBox(width: 43),
+                SizedBox(width: 30),
 
                 Text("Empty"),
               ],
