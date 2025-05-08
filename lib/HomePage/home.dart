@@ -8,6 +8,47 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  // List untuk menyimpan judul dashboard
+  List<String> dashboardTitles = ["Judul Dashboard 0", "Judul Dashboard 2"];
+
+  // Fungsi untuk menambahkan dashboard baru
+  void _addDashboard() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String newTitle = ""; // Variabel untuk menyimpan input pengguna
+        return AlertDialog(
+          title: Text("nambahkan Dashboard Baru"),
+          content: TextField(
+            onChanged: (value) {
+              newTitle = value; // Simpan input pengguna
+            },
+            decoration: InputDecoration(hintText: "Masukkan judul dashboard"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+              },
+              child: Text("Batal"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (newTitle.isNotEmpty) {
+                  setState(() {
+                    dashboardTitles.add(newTitle); // Tambahkan judul baru ke list
+                  });
+                }
+                Navigator.of(context).pop(); // Tutup dialog
+              },
+              child: Text("Tambah"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,10 +78,9 @@ class _HomepageState extends State<Homepage> {
             ],
           ),
         ),
-
-        //APPBAR KANAN
         actions: [
           Padding(
+<<<<<<< Updated upstream
             padding: EdgeInsets.only(right:3),
             child: 
               Row(
@@ -81,9 +121,42 @@ class _HomepageState extends State<Homepage> {
                   
                 ],
               ),
+=======
+            padding: EdgeInsets.only(left: 0, top: 8, right: 3, bottom: 8),
+            child: Wrap(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.35,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(90),
+                          borderSide: BorderSide(color: Colors.blue),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Pencarian',
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.000),
+                  child: Center(
+                    child: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {},
+                    ),
+                  ),
+                )
+              ],
+>>>>>>> Stashed changes
             ),
           ],
       ),
+<<<<<<< Updated upstream
 
       //BODY
       body: 
@@ -226,11 +299,114 @@ class _HomepageState extends State<Homepage> {
                         ),
                     );
                   },
+=======
+      body: Column(
+        children: [
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.01),
+                child: Row(
+                  children: [
+                    Chip(
+                      label: const Text('Kategori'),
+                      avatar: CircleAvatar(
+                        backgroundColor: Colors.grey.shade800,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Chip(
+                      label: const Text('Favorit'),
+                      avatar: CircleAvatar(
+                        backgroundColor: Colors.grey.shade800,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.03,
+                left: MediaQuery.of(context).size.width * 0.01,
+              ),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 5,
+>>>>>>> Stashed changes
+                ),
+                itemCount: dashboardTitles.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/tes.jpg"),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.01,
+                        right: MediaQuery.of(context).size.width * 0.01,
+                        top: MediaQuery.of(context).size.height * 0.03,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            child: Text(
+                              dashboardTitles[index],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: MediaQuery.of(context).size.width * 0.035,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.menu,
+                                    color: Colors.black,
+                                    size: MediaQuery.of(context).size.width * 0.05,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      dashboardTitles.removeAt(index); // Hapus dashboard yang dipilih    
+                                      
+                                    });
+                                    Navigator.of(context).pop(); // Tutup dialog  
+                                    
+                                  },
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: Colors.black,
+                                    size: MediaQuery.of(context).size.width * 0.05,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-)
-
-
+          ),
         ],
       ),
           
@@ -238,8 +414,7 @@ class _HomepageState extends State<Homepage> {
         ),
         
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        // backgroundColor: Colors.deepPurple,
+        onPressed: _addDashboard, // Panggil fungsi untuk menambah dashboard
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

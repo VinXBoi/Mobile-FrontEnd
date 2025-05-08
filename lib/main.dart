@@ -1,5 +1,7 @@
 import 'package:activity_tracker/HomePage/home.dart';
 import 'package:activity_tracker/LoginPage/login.dart';
+import 'package:activity_tracker/isiDashboard.dart';
+import 'package:activity_tracker/isiPage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +20,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
+<<<<<<< Updated upstream
       home: const LoginPage(),
+=======
+      home:  IsiPage(),
+>>>>>>> Stashed changes
       // const LoginPage(),
     );
   }
