@@ -1,4 +1,5 @@
 
+import 'package:activity_tracker/isiPage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      home: const HomePage2(),
+      home: const IsiPage(),
       // const LoginPage(),
     );
   }
