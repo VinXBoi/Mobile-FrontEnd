@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:activity_tracker/LoginPage/register.dart';
-import 'package:activity_tracker/HomePage/home.dart';
+// import 'package:activity_tracker/HomePage/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
