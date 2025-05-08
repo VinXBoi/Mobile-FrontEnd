@@ -1,6 +1,7 @@
-import 'package:activity_tracker/HomePage/home.dart';
-import 'package:activity_tracker/homepagebaru.dart';
-import 'package:activity_tracker/LoginPage/login.dart';
+// import 'package:activity_tracker/HomePage/home.dart';
+import 'package:activity_tracker/HomePageBaru.dart';
+// import 'package:activity_tracker/LoginPage/login.dart';
+// import 'package:activity_tracker/tes.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      home: const HomePage2(),
+      home: HomePage2(),
       // const LoginPage(),
     );
   }
