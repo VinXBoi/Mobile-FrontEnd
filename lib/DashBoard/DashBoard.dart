@@ -62,7 +62,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.asset(
-                      'assets/tes.jpg',
+                      'assets/wallpaper.jpg',
                       height: 180,
                       width: double.infinity,
                       fit: BoxFit.cover,
