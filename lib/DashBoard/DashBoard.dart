@@ -26,21 +26,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
     Task(title: 'Prepare the final draft of the paper'),
     Task(title: 'Submit the research paper'),
   ];
-  // Map<String, List<Task>> taskList = {
-  //   'Not Started' : [
-  //     Task(title: 'Finalize research topic'),
-  //     Task(title: 'Draft and submit research proposal'),
-  //   ],
-  //   'In Progress' : [
-  //     Task(title: 'Begin and complete data collection'),
-  //     Task(title: 'Write the first complete draft of the paper'),
-  //   ],
-  //   'Completed' : [
-  //     Task(title: 'Revise the draft based on feedback'),
-  //     Task(title: 'Prepare the final draft of the paper'),
-  //     Task(title: 'Submit the research paper'),
-  //   ],
-  // };
 
   void addComment(String comment) {
     _comments.add(comment);
@@ -84,7 +69,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Kanban(),
+                  
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: const [
@@ -119,7 +104,62 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     },
                   ),
                   const SizedBox(height: 24),
+                  const Divider(thickness: 1, height: 24),
+                  Kanban(),
+                  const Divider(thickness: 1, height: 24),
+                  Row(spacing: 10,children: [
+                    Icon(Icons.star),
+                    const Text(
+                        'Semester Goals',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                  ],),
+                  const Divider(thickness: 1, height: 24),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Card(
+                        elevation: 0.5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const ListTile(
+                          leading: Icon(Icons.track_changes, color: Colors.black54),
+                          title: Text('Goals 1'),
+                        ),
+                      ),
 
+                      const SizedBox(height: 4),
+
+                      Card(
+                        elevation: 0.5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const ListTile(
+                          leading: Icon(Icons.track_changes, color: Colors.black54),
+                          title: Text('Goals 2'),
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      Card(
+                        elevation: 0.5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const ListTile(
+                          leading: Icon(Icons.track_changes, color: Colors.black54),
+                          title: Text('Goals 3'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(thickness: 1, height: 24),
                   const Text(
                     'Current draft',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

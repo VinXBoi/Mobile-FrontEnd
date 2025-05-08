@@ -1,4 +1,6 @@
 import 'package:activity_tracker/DashBoard/DashBoard.dart';
+import 'package:activity_tracker/isiDashboard.dart';
+import 'package:activity_tracker/isiPage.dart';
 import 'package:flutter/material.dart';
 
 void main() {

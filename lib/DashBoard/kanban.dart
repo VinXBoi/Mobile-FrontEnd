@@ -14,7 +14,6 @@ class KanbanTask {
 }
 
 class _KanbanState extends State<Kanban> {
-  String selectedValue = "Assignment";
   List<String> typeKanban = ['Not Started', 'In Progress', 'Completed'];
   Map<String, List<KanbanTask>> KanbanTaskList = {
     'Not Started' : [
@@ -24,7 +23,8 @@ class _KanbanState extends State<Kanban> {
       KanbanTask(name: 'T2')
     ],
     'Completed' : [
-      KanbanTask(name: 'T3')
+      KanbanTask(name: 'T3'),
+      KanbanTask(name: 'T4')
     ],
   };
   late List<int> counterKanban = typeKanban.map((key) => KanbanTaskList[key]?.length ?? 0 ).toList();
@@ -32,60 +32,16 @@ class _KanbanState extends State<Kanban> {
   @override
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+    return Padding(
+        padding: const EdgeInsets.all(0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              spacing: 10,
               children: [
-                const Text("TIPE\t"),
-                const SizedBox(width: 8),
-                DropdownButton<String>(
-                  value: selectedValue,
-                  icon: const Icon(Icons.arrow_drop_down),
-                  underline: const SizedBox(),
-                  items: [
-                    DropdownMenuItem(
-                      value: 'Assignment',
-                      child: Row(
-                        children: const [
-                          Icon(Icons.check_circle, color: Colors.blue),
-                          SizedBox(width: 8),
-                          Text('Assignment'),
-                        ],
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Exam',
-                      child: Row(
-                        children: const [
-                          Icon(Icons.task, color: Colors.blue),
-                          SizedBox(width: 8),
-                          Text('Exam'),
-                        ],
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'All',
-                      child: Row(
-                        children: const [
-                          Icon(Icons.wb_sunny, color: Colors.blue),
-                          SizedBox(width: 8),
-                          Text('All'),
-                        ],
-                      ),
-                    ),
-                  ],
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedValue = newValue!;
-                    });
-                  },
-                ),
-                const SizedBox(width: 16),
-                TextButton(onPressed: () {}, child: const Text("TEST")),
+                Icon(Icons.wb_sunny),
+                Text("Progress Tracker", style: TextStyle(fontWeight: FontWeight.bold ),),
               ],
             ),
             const Divider(thickness: 1, height: 24),
@@ -96,13 +52,12 @@ class _KanbanState extends State<Kanban> {
             
           ],
         ),
-      ),
     );
   }
 
   Widget progressCard(MaterialColor mainColor, String type, int counter, List<KanbanTask>? dataKanban) {
     return Container(
-      width: 200,
+      width: double.infinity,
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -150,7 +105,12 @@ class _KanbanState extends State<Kanban> {
                       border: Border.all(color: Colors.grey.shade300)
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    child: Text(dataKanban[index].name),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(dataKanban[index].name),
+                        ],
+                      ) 
                   )
                   
                 );
