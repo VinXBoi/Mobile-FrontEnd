@@ -20,7 +20,8 @@ class _NewpageState extends State<Newpage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text("New Page"),
-        backgroundColor: Colors.blue[200],
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: () {},
@@ -178,7 +179,7 @@ class _NewpageState extends State<Newpage> {
             SizedBox(height: 16,),
             Row(children: [
               Expanded(child: TextButton(onPressed: (){
-                Navigator.push(context, 
+                Navigator.pushReplacement(context, 
                   MaterialPageRoute(builder: (context) => DashBoardPage())
                 );
               }, child: Text("Save Task")))

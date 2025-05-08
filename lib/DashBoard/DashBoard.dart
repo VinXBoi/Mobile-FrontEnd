@@ -46,6 +46,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
       appBar: AppBar(
         title: const Text('Dashboard'),
         backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.share),

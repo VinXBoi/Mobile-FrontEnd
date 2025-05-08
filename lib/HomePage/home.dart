@@ -64,7 +64,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.blue[100],
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
         elevation: 1,
         titleSpacing: 0,
         title: 
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(width: 10),
             Text(
               "Teresia",
-              style: TextStyle(fontSize: 18, color: Colors.black),
+              style: TextStyle(fontSize: 18),
             ),
           ],
         )
@@ -343,7 +344,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(icon: Icon(Icons.settings, color: Colors.blue), onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Setting()));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Setting()));
               }),
               IconButton(icon: Icon(Icons.home, color: Colors.blue), onPressed: () {}),
               IconButton(icon: Icon(Icons.email, color: Colors.blue), onPressed: () {}),
