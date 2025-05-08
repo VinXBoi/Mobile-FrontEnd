@@ -81,7 +81,6 @@ class _HomePage2State extends State<HomePage2> {
         ,),
         
         actions: [
-          
           Container(
             width: 
               MediaQuery.of(context).size.width*0.35,
@@ -124,6 +123,18 @@ class _HomePage2State extends State<HomePage2> {
       body: SafeArea(
         child: Column(
           children: [
+            Padding(padding: EdgeInsets.only(left: 10, top: 5, bottom: 5), 
+            
+            child:  Row(
+                  
+              children: [
+                  Text(
+                    "Dashboard", 
+                    style: TextStyle( fontSize: 20 ),
+                  ),
+                ],
+            )
+,),
             // Scrollable Card with Arrows
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -155,6 +166,10 @@ class _HomePage2State extends State<HomePage2> {
                             child: Stack(
                               children: [
                                 // Gradient overlay
+                                
+  
+
+
                                 Positioned.fill(
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -207,6 +222,18 @@ class _HomePage2State extends State<HomePage2> {
                 ],
               ),
             ),
+            Padding(padding: EdgeInsets.only(left: 10, top: 5, bottom: 5), 
+            
+            child:  Row(
+                  
+              children: [
+                  Text(
+                    "Private", 
+                    style: TextStyle( fontSize: 20 ),
+                  ),
+                ],
+            )
+,),
 
             // List bawah (sliver list)
             Expanded(
@@ -273,6 +300,12 @@ class _HomePage2State extends State<HomePage2> {
           ],
         ),
       ),
+
+      floatingActionButton: FloatingActionButton(onPressed: (){}, 
+        child: Icon(Icons.add),
+        
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
 
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
