@@ -1,6 +1,8 @@
+import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:activity_tracker/LoginPage/register.dart';
 import 'package:activity_tracker/HomePage/home.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,12 +14,50 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool isChecked = false;
   bool obscurePw = true;
+  String? userError;
+  String? pwError;
   List <Widget> iconEye = [Icon(Icons.visibility), Icon(Icons.visibility_off)];
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+    List<User> listUser = userProvider.listUser;
+
+    void checkUser() {
+      if(_usernameController.text.isEmpty || _pwController.text.isEmpty) {
+        if(_usernameController.text.isEmpty) userError = "Username Could Not Empty (User : admin / Register First)";
+        if(_pwController.text.isEmpty) pwError = "Password Could Not Empty (Password : admin / Register First)";
+        setState(() {
+          
+        });
+        return;
+      }
+
+      for(int i = 0; i < listUser.length; i++) {
+        if(listUser[i].username == _usernameController.text) {
+          userError = null;
+          pwError = null;
+          if(listUser[i].password != _pwController.text) {
+            pwError = "Password Did Not Match";
+            setState(() {
+              
+            });
+            return;
+          }
+          Navigator.push(context, 
+            MaterialPageRoute(builder: (context) => HomePage(username: listUser[i].username))
+          );
+        }
+      }
+      setState(() {
+        userError = "Username Could Not Found (User : admin / Fegister First)";
+        pwError = null;
+      });
+      return;
+    }
+
     return Scaffold(
       body: Padding(padding: EdgeInsets.all(30),
         child : Column(
@@ -65,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
               child: TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
+                  errorText: userError,
                   label: Text("Username"),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
@@ -73,6 +114,14 @@ class _LoginPageState extends State<LoginPage> {
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
                     borderRadius: BorderRadius.circular(8)
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   prefixIcon : Icon(Icons.home, size: 20,),
                   // filled: true,
@@ -86,6 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _pwController,
                 obscureText: obscurePw,
                 decoration: InputDecoration(
+                  errorText: pwError,
                   label: Text("Password"),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
@@ -94,6 +144,14 @@ class _LoginPageState extends State<LoginPage> {
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
                     borderRadius: BorderRadius.circular(8)
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   prefixIcon: Icon(Icons.lock, size: 20,), 
                   suffixIcon: IconButton(onPressed:() {
@@ -128,9 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 50, // Atur tinggi tombol
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => HomePage())
-                        );
+                        checkUser();
                       }, 
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(Colors.blue),

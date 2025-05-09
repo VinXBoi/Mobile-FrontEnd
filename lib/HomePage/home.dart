@@ -3,7 +3,8 @@ import 'package:activity_tracker/HomePage/setting.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final username;
+  const HomePage({super.key, required this.username});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(width: 10),
             Text(
-              "Teresia",
+              widget.username,
               style: TextStyle(fontSize: 18),
             ),
           ],

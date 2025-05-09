@@ -1,5 +1,8 @@
+import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:activity_tracker/LoginPage/login.dart';
+import 'package:provider/provider.dart';
+
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -12,6 +15,10 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isChecked = false;
   bool obscurePw = true;
   bool obscurePwc = true;
+  String? userError;
+  String? emailError;
+  String? pwcError;
+  String? pwError;
   List <Widget> iconEye = [Icon(Icons.visibility), Icon(Icons.visibility_off)];
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -73,6 +80,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
+                  errorText: userError,
                   label: Text("Username"),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
@@ -80,6 +88,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
                     borderRadius: BorderRadius.circular(8)
                   ),
                   prefixIcon : Icon(Icons.home, size: 20,)
@@ -92,6 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
+                  errorText: emailError,
                   label: Text("Email"),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
@@ -99,6 +116,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
                     borderRadius: BorderRadius.circular(8)
                   ),
                   prefixIcon : Icon(Icons.mail, size: 20,)
@@ -111,6 +136,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: _pwController,
                 obscureText: obscurePw,
                 decoration: InputDecoration(
+                  errorText: pwError,
                   label: Text("Password"),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
@@ -118,6 +144,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
                     borderRadius: BorderRadius.circular(8)
                   ),
                   prefixIcon: Icon(Icons.lock, size: 20,), 
@@ -135,6 +169,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: _pwcController,
                 obscureText: obscurePwc,
                 decoration: InputDecoration(
+                  errorText: pwcError,
                   label: Text("Password Confirmation"),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
@@ -142,6 +177,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
                     borderRadius: BorderRadius.circular(8)
                   ),
                   prefixIcon: Icon(Icons.lock, size: 20,), 
@@ -182,11 +225,42 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 50, // Atur tinggi tombol
                     child: ElevatedButton(
                       onPressed: () {
-                        if(isChecked) {
-                          Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => LoginPage())
-                          );
+                        setState(() {
+                          userError = null;
+                          emailError = null;
+                          pwError = null;
+                          pwcError = null;
+                        });
+                        
+                        if(_usernameController.text.isEmpty || _emailController.text.isEmpty || _pwController.text.isEmpty || _pwcController.text.isEmpty) {
+                          if(_usernameController.text.isEmpty) userError = "Username Could Not Empty";
+                          if(_emailController.text.isEmpty) emailError = "Email Could Not Empty";
+                          if(_pwController.text.isEmpty) pwError = "Password Could Not Empty";
+                          if(_pwcController.text.isEmpty) pwcError = "Password Confirmation Could Not Empty";
+                          setState(() {
+                
+                          });
+                          return;
+                        } 
+
+                        if(_pwController.text != _pwcController.text) {
+                          setState(() {
+                            pwError = "Password Didn't Match";
+                            pwcError = "Password Didn't Match";
+                          });
+                          return;
                         }
+
+                        if(!isChecked) return;
+
+                        
+                        Provider.of<UserProvider>(context, listen: false).addUser(_usernameController.text, _pwController.text);
+                        Navigator.push(context, 
+                          MaterialPageRoute(builder: (context) => LoginPage())
+                        );
+                      
+                        
+
                       }, 
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(Colors.blue),
