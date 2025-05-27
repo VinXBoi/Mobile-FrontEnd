@@ -40,7 +40,6 @@ class _HomePageState extends State<HomePage> {
     {'icon': Icons.group, 'title': 'Mikroskil Programming Class'},
     {'icon': Icons.school, 'title': 'Research Paper Planner'},
   ];
-
   final ScrollController _scrollController = ScrollController();
 
   void _scrollLeft() {
@@ -57,6 +56,19 @@ class _HomePageState extends State<HomePage> {
       duration: Duration(milliseconds: 300),
       curve: Curves.ease,
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login Berhasil'),
+          duration: Duration(seconds: 4),
+        ),
+      );
+    });
   }
 
   @override
@@ -130,17 +142,15 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Padding(padding: EdgeInsets.only(left: 10, top: 5, bottom: 5), 
-            
-            child:  Row(
-                  
-              children: [
-                  Text(
-                    "Dashboard", 
-                    style: TextStyle( fontSize: 20 ),
-                  ),
-                ],
-            )
-,),
+              child:  Row(
+                children: [
+                    Text(
+                      "Dashboard", 
+                      style: TextStyle( fontSize: 20 ),
+                    ),
+                  ],
+              )
+            ,),
             // Scrollable Card with Arrows
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -231,17 +241,15 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Padding(padding: EdgeInsets.only(left: 10, top: 5, bottom: 5), 
-            
-            child:  Row(
-                  
-              children: [
-                  Text(
-                    "Private", 
-                    style: TextStyle( fontSize: 20 ),
-                  ),
-                ],
-            )
-,),
+              child:  Row(
+                children: [
+                    Text(
+                      "Private", 
+                      style: TextStyle( fontSize: 20 ),
+                    ),
+                  ],
+              )
+            ,),
 
             // List bawah (sliver list)
             Expanded(
@@ -298,6 +306,33 @@ class _HomePageState extends State<HomePage> {
                                     },
                                   ),
                                   IconButton(onPressed:(){}, icon:Icon(Icons.add, color: Colors.lightBlue), ),
+                                  IconButton(onPressed:(){
+                                    showDialog(context: context, 
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('Hapus Item'),
+                                          content: Text('Yakin ingin menghapus "${items[index]['title']}"?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop(); // Tutup dialog
+                                              },
+                                              child: Text('Batal'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  items.removeAt(index);
+                                                });
+                                                Navigator.of(context).pop(); // Tutup dialog
+                                              },
+                                              child: Text('Hapus'),
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                    );
+                                  }, icon:Icon(Icons.delete, color: Colors.grey[800]), ),
                                 ],
                               ),
                             )

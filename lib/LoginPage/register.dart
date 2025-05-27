@@ -209,10 +209,61 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text("By creating an account, you agree to our"),
-                  Text("Terms & Conditions", style: TextStyle(
+                  TextButton(onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(1),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Terms & Conditions',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                SingleChildScrollView(
+                                  child: Text(
+                                    'By using this app, you agree to the following terms and conditions.\n'
+                                    'Make sure to read carefully. Your data may be collected for analytics purposes.\n'
+                                    'You must not misuse this app or engage in illegal activities.\n'
+                                    'For full details, visit our official website or contact support.',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      'Close',
+                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Text("Terms & Conditions", style: TextStyle(
                     color: Colors.blue,
                     fontWeight: FontWeight.bold
-                  ),), 
+                  ),),
+                  ),
                 ],),
                 Expanded(child: Text('')),
               ],

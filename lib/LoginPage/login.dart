@@ -46,13 +46,13 @@ class _LoginPageState extends State<LoginPage> {
             });
             return;
           }
-          Navigator.push(context, 
+          Navigator.pushReplacement(context, 
             MaterialPageRoute(builder: (context) => HomePage(username: listUser[i].username))
           );
         }
       }
       setState(() {
-        userError = "Username Could Not Found (User : admin / Fegister First)";
+        userError = "Username Could Not Found (User : admin / Register First)";
         pwError = null;
       });
       return;
