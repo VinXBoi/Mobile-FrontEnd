@@ -1,6 +1,8 @@
 import 'package:activity_tracker/DashBoard/DashBoard.dart';
 import 'package:activity_tracker/HomePage/setting.dart';
+import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final username;
@@ -11,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Map<DashboardProvider, List<TaskProvider>>? dashboards;
 
   final List<Map<String, dynamic>> cards = [
     {
@@ -35,11 +38,6 @@ class _HomePageState extends State<HomePage> {
     },
   ];
 
-  final List<Map<String, dynamic>> items = [
-    {'icon': Icons.edit, 'title': 'Class Notes'},
-    {'icon': Icons.group, 'title': 'Mikroskil Programming Class'},
-    {'icon': Icons.school, 'title': 'Research Paper Planner'},
-  ];
   final ScrollController _scrollController = ScrollController();
 
   void _scrollLeft() {
@@ -69,11 +67,14 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     });
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    dashboards = userProvider.userDashboard[widget.username];
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dashboardEntries = dashboards?.entries.toList();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -265,7 +266,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          final item = items[index];
+                          final dashboardKey = dashboardEntries?[index].key;
+                          final dashboardValue = dashboardEntries?[index].value;
+                          
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
@@ -287,11 +290,11 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Icon(Icons.arrow_right, color: theme.primaryColor),
                                   SizedBox(width: 10),
-                                  Icon(item['icon'], color: Colors.black),
+                                  Icon(dashboardKey?.icon, color: Colors.black),
                                   SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
-                                      item['title'],
+                                      dashboardKey!.title,
                                       style: TextStyle(
                                         color: Colors.black87,
                                         fontSize: 15,
@@ -311,7 +314,7 @@ class _HomePageState extends State<HomePage> {
                                       builder: (BuildContext context) {
                                         return AlertDialog(
                                           title: Text('Hapus Item'),
-                                          content: Text('Yakin ingin menghapus "${items[index]['title']}"?'),
+                                          content: Text('Yakin ingin menghapus "${dashboardKey.title}"?'),
                                           actions: [
                                             TextButton(
                                               onPressed: () {
@@ -322,7 +325,7 @@ class _HomePageState extends State<HomePage> {
                                             TextButton(
                                               onPressed: () {
                                                 setState(() {
-                                                  items.removeAt(index);
+                                                  
                                                 });
                                                 Navigator.of(context).pop(); // Tutup dialog
                                               },
@@ -339,7 +342,7 @@ class _HomePageState extends State<HomePage> {
                           );
                           
                         },
-                        childCount: items.length,
+                        childCount: dashboardEntries?.length,
                       ),
                     ),
                   ),
@@ -350,22 +353,40 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        setState(() {
-          cards.add(
-            {
-              'title': 'Class Notes',
-              'icon': Icons.edit,
-              'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
-            },
-          );
-          items.add(
-            {'icon': Icons.edit, 'title': '${items.length + 1}'},
-          );
-        });
+      floatingActionButton: FloatingActionButton(onPressed: () async {
+        final result = await showDialog<DashboardProvider>(
+          context: context,
+          builder: (context) {
+            String title = '';
+            return AlertDialog(
+              title: Text('Add New Dashboard'),
+              content: TextField(
+                decoration: InputDecoration(labelText: 'Dashboard Title'),
+                onChanged: (value) => title = value,
+              ),
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+                TextButton(
+                  onPressed: () {
+                    if (title.isNotEmpty) {
+                      Navigator.pop(context, DashboardProvider(title: title, icon: Icons.edit));
+                    } 
+                  },
+                  child: Text('Add'),
+                ),
+              ],
+            );
+          },
+        );
+        if (result != null) {
+          final userProvider = Provider.of<UserProvider>(context, listen: false);
+          userProvider.addDashboard(widget.username, result);
+          setState(() {
+            dashboards = userProvider.userDashboard[widget.username];
+          });
+        }
       }, 
         child: Icon(Icons.add),
-        
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
 

@@ -13,17 +13,45 @@ void main() {
 
 class UserProvider extends ChangeNotifier {
   List<User> listUser = [User(username: 'admin', password: 'admin')];
-
+  Map<String, Map<DashboardProvider,List<TaskProvider>>> userDashboard = {
+    'admin' :  {
+      DashboardProvider(title: 'Class Notes', icon: Icons.edit) : [
+        TaskProvider(title: 'Default Task 1'),
+        TaskProvider(title: 'Default Task 2'),
+      ] 
+    }
+  };
   void addUser(String username, String password) {
     listUser.add(User(username: username, password: password));
+    userDashboard[username] = {};
+    notifyListeners();
+  }
+
+  void addDashboard(String username, DashboardProvider dashboard) {
+    userDashboard[username]![dashboard] = [];
+    notifyListeners();
+  }
+
+  void addTask(String username, DashboardProvider dashboard, TaskProvider task) {
+    userDashboard[username]![dashboard]!.add(task);
     notifyListeners();
   }
 }
 
 class User {
   String username, password;
-
   User({required this.username, required this.password});
+}
+
+class DashboardProvider {
+  String title; 
+  dynamic icon;
+  DashboardProvider({required this.title, required this.icon});
+}
+
+class TaskProvider {
+  String title;
+  TaskProvider({required this.title});  
 }
 
 class MyApp extends StatelessWidget {
