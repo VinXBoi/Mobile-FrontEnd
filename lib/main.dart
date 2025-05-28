@@ -32,10 +32,28 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeDashboard(String username, DashboardProvider dashboard) {
+    userDashboard[username]?.remove(dashboard);
+    notifyListeners();
+  }
+
+  void editDashboard(String username, DashboardProvider oldDashboard, DashboardProvider newDashboard) {
+    final dashboards = userDashboard[username];
+    if (dashboards != null && dashboards.containsKey(oldDashboard)) {
+      final tasks = dashboards[oldDashboard];
+      dashboards.remove(oldDashboard);
+      dashboards[newDashboard] = tasks ?? [];
+      notifyListeners();
+    }
+  }
+
+
   void addTask(String username, DashboardProvider dashboard, TaskProvider task) {
     userDashboard[username]![dashboard]!.add(task);
     notifyListeners();
   }
+
+
 }
 
 class User {

@@ -302,40 +302,80 @@ class _HomePageState extends State<HomePage> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: Icon(Icons.more_vert, color: Colors.grey[800]),
-                                    onPressed: () {
-                                      
-                                    },
-                                  ),
-                                  IconButton(onPressed:(){}, icon:Icon(Icons.add, color: Colors.lightBlue), ),
-                                  IconButton(onPressed:(){
-                                    showDialog(context: context, 
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text('Hapus Item'),
-                                          content: Text('Yakin ingin menghapus "${dashboardKey.title}"?'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop(); // Tutup dialog
-                                              },
-                                              child: Text('Batal'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  
-                                                });
-                                                Navigator.of(context).pop(); // Tutup dialog
-                                              },
-                                              child: Text('Hapus'),
-                                            ),
-                                          ],
+                                  PopupMenuButton(
+                                    icon: Icon(Icons.more_vert),
+                                    onSelected: (value) {
+                                      if (value == 'edit') {
+                                        String editedTitle = dashboardKey.title;
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text('Edit Dashboard'),
+                                              content: TextField(
+                                                controller: TextEditingController(text: dashboardKey.title),
+                                                decoration: InputDecoration(labelText: 'New Title'),
+                                                onChanged: (value) => editedTitle = value,
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(context),
+                                                  child: Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    if (editedTitle.isNotEmpty) {
+                                                      final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                                      userProvider.editDashboard(widget.username, dashboardKey, DashboardProvider(title: editedTitle, icon: dashboardKey.icon));
+                                                      setState(() {
+                                                        dashboards = userProvider.userDashboard[widget.username];
+                                                      });
+                                                    }
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('Save'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else if (value == 'delete') {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Hapus Item'),
+                                              content: Text('Yakin ingin menghapus "${dashboardKey.title}"?'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Batal'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                                    userProvider.removeDashboard(widget.username, dashboardKey);
+                                                    setState(() {
+                                                      dashboards = userProvider.userDashboard[widget.username];
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Hapus'),
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         );
                                       }
-                                    );
-                                  }, icon:Icon(Icons.delete, color: Colors.grey[800]), ),
+                                    },
+                                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                      PopupMenuItem<String>(value: 'edit', child: Text("Edit")),
+                                      PopupMenuItem<String>(value: 'delete', child: Text("Hapus")),
+                                    ],
+                                  ),
+                            
                                 ],
                               ),
                             )
