@@ -179,9 +179,10 @@ class _NewpageState extends State<Newpage> {
             SizedBox(height: 16,),
             Row(children: [
               Expanded(child: TextButton(onPressed: (){
-                Navigator.pushReplacement(context, 
-                  MaterialPageRoute(builder: (context) => DashBoardPage())
-                );
+                // Navigator.pushReplacement(context, 
+                //   MaterialPageRoute(builder: (context) => DashBoardPage())
+                // );
+                Navigator.pop(context);
               }, child: Text("Save Task")))
 
             ],)

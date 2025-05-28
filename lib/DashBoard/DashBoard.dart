@@ -1,15 +1,13 @@
 import 'package:activity_tracker/DashBoard/Newpage.dart';
+import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:activity_tracker/DashBoard/kanban.dart';
-
-class Task {
-  final String title;
-
-  Task({required this.title});
-}
+import 'package:provider/provider.dart';
 
 class DashBoardPage extends StatefulWidget {
-  const DashBoardPage({super.key});
+  final DashboardProvider dashboard;
+  final username;
+  const DashBoardPage({super.key, required this.username, required this.dashboard});
 
   @override
   _DashBoardPageState createState() => _DashBoardPageState();
@@ -18,30 +16,32 @@ class DashBoardPage extends StatefulWidget {
 class _DashBoardPageState extends State<DashBoardPage> {
   final TextEditingController commentController = TextEditingController();
   final List<String> _comments = [];
-  final List<Task> tasks = [
-    Task(title: 'Finalize research topic'),
-    Task(title: 'Draft and submit research proposal'),
-    Task(title: 'Begin and complete data collection'),
-    Task(title: 'Write the first complete draft of the paper'),
-    Task(title: 'Revise the draft based on feedback'),
-    Task(title: 'Prepare the final draft of the paper'),
-    Task(title: 'Submit the research paper'),
-  ];
+  // final List<TaskProvider> TaskProviders = [
+  //   TaskProvider(title: 'Finalize research topic'),
+  //   TaskProvider(title: 'Draft and submit research proposal'),
+  //   TaskProvider(title: 'Begin and complete data collection'),
+  //   TaskProvider(title: 'Write the first complete draft of the paper'),
+  //   TaskProvider(title: 'Revise the draft based on feedback'),
+  //   TaskProvider(title: 'Prepare the final draft of the paper'),
+  //   TaskProvider(title: 'Submit the research paper'),
+  // ];
 
   void addComment(String comment) {
     _comments.add(comment);
   }
 
-  void addNewTask() {
-    setState(() {
-      tasks.add(Task(
-        title: 'New Task ${tasks.length + 1}',
-      ));
-    });
-  }
+  // void addNewTask() {
+  //   setState(() {
+  //     tasks.add(Task(
+  //       title: 'New Task ${tasks.length + 1}',
+  //     ));
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final List<TaskProvider> dashboardTasks = userProvider.userDashboard[widget.username]?[widget.dashboard] ?? [];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -74,12 +74,12 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   const Divider(thickness: 1, height: 24),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.school, size: 40),
                       SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Research Paper Planner',
+                          widget.dashboard.title,
                           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -228,7 +228,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
-                              addNewTask();
+                              // addNewTask();
                             },
                             icon: const Icon(Icons.add),
                             label: const Text('New'),
@@ -248,9 +248,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: tasks.length,
+                    itemCount: dashboardTasks.length,
                     itemBuilder: (context, index) {
-                      final task = tasks[index];
+                      final task = dashboardTasks[index];
                       return Card(
                         child: ListTile(
                           title: Text(task.title),
@@ -261,16 +261,18 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   const SizedBox(height: 16),
 
                   ElevatedButton.icon(
-                  onPressed: addNewTask,
-                  icon: const Icon(Icons.add),
-                  label: const Text('New Page'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    onPressed: () {
+                      userProvider.addTask(widget.username, widget.dashboard, TaskProvider(title: 'Default Task'));
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('New Page'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
-                ),
 
                 const SizedBox(height: 16),
                 const Divider(thickness: 1, height: 24),

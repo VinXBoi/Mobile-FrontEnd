@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                           final card = cards[index];
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
                             },
                             child: Container(
                               width: 160,
@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                           
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage(username: widget.username, dashboard: dashboardKey,)));
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 16),
