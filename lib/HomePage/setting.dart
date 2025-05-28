@@ -7,14 +7,14 @@ class Setting extends StatefulWidget {
   State<Setting> createState() => _SettingState();
 }
 
-bool isMarketingEnabled = false;
+bool isTaskNotificationEnabled = false;
 
-Map<String, bool> marketingTopics = {
-  "Events and Resources": true,
-  "Newsletters and Thought Leadership": true,
-  "Product Education": true,
-  "Product Updates": true,
-  "User Research and Surveys": true,
+Map<String, bool> taskCategories = {
+  "Project Deadlines": true,
+  "Team Meetings": true,
+  "Task Reminders": true,
+  "Progress Updates": true,
+  "Feedback and Reviews": true,
 };
 
 enum NotificationTone { defaultTone, vibrateOnly, silent }
@@ -141,7 +141,7 @@ class _SettingState extends State<Setting> {
           Divider(),
           SizedBox(height: 30),
           Text(
-            "Marketing",
+            "Tasks",
             style: TextStyle(
               color: Colors.black,
               fontSize: 18,
@@ -149,36 +149,37 @@ class _SettingState extends State<Setting> {
             ),
           ),
           Text(
-            "Keep up to date with your favorite Notion news, events, and product releases!",
+            "Stay on top of your important tasks, meetings, and progress updates!",
           ),
           SwitchListTile(
-            title: Text("Marketing Communications"),
-            value: isMarketingEnabled,
+            title: Text("Task Notifications"),
+            value: isTaskNotificationEnabled,
             onChanged: (bool value) {
               setState(() {
-                isMarketingEnabled = value;
+                isTaskNotificationEnabled = value;
                 if (!value) {
-                  for (var key in marketingTopics.keys) {
-                    marketingTopics[key] = true;
+                  for (var key in taskCategories.keys) {
+                    taskCategories[key] = true;
                   }
                 }
               });
             },
           ),
+
           Divider(),
           SizedBox(height: 20),
-          if (isMarketingEnabled)
+          if (isTaskNotificationEnabled)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Topics", style: TextStyle(fontWeight: FontWeight.bold)),
-                ...marketingTopics.keys.map((topic) {
+                ...taskCategories.keys.map((topic) {
                   return CheckboxListTile(
                     title: Text(topic),
-                    value: marketingTopics[topic],
+                    value: taskCategories[topic],
                     onChanged: (bool? value) {
                       setState(() {
-                        marketingTopics[topic] = value!;
+                        taskCategories[topic] = value!;
                       });
                     },
                     controlAffinity: ListTileControlAffinity.leading,
@@ -191,6 +192,7 @@ class _SettingState extends State<Setting> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
+                        Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Settings saved")),
                         );
@@ -211,6 +213,9 @@ class _SettingState extends State<Setting> {
                       onPressed: () {
                         // Aksi saat Cancel ditekan
                         Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Changes discarded")),
+                        );
                       },
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(
@@ -249,10 +254,10 @@ class _SettingState extends State<Setting> {
           activeColor: Colors.blue,
         ),
         Divider(
-        color: Colors.grey[400],  // Lebih terang agar terlihat
-        thickness: 1,
-        height: 8,
-      ),
+          color: Colors.grey[400], // Lebih terang agar terlihat
+          thickness: 1,
+          height: 8,
+        ),
       ],
     );
   }

@@ -63,8 +63,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      'assets/wallpaper.jpg',
+                    child: Image.network(
+                      'https://www.hdwallpapers.in/download/ganyu_xiao_zhongli_4k_hd_genshin_impact-HD.jpg',
                       height: 180,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -263,6 +263,14 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       userProvider.addTask(widget.username, widget.dashboard, TaskProvider(title: 'Default Task'));
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Task berhasil ditambahkan'),
+                            duration: Duration(seconds: 4),
+                          ),
+                        );
+                      });
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('New Page'),

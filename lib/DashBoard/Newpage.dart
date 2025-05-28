@@ -1,4 +1,3 @@
-import 'package:activity_tracker/DashBoard/DashBoard.dart';
 import 'package:flutter/material.dart';
 
 class Newpage extends StatefulWidget {

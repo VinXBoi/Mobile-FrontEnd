@@ -1,4 +1,6 @@
 import 'package:activity_tracker/DashBoard/DashBoard.dart';
+import 'package:activity_tracker/DashBoard/TambahDashboard.dart';
+import 'package:activity_tracker/HomePage/about.dart';
 import 'package:activity_tracker/HomePage/setting.dart';
 import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage> {
     final dashboardEntries = dashboards?.entries.toList();
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         elevation: 1,
@@ -86,10 +88,7 @@ class _HomePageState extends State<HomePage> {
         Padding(padding: EdgeInsets.all(10), 
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 22,
-              backgroundImage: AssetImage("assets/tes.jpg"),
-            ),
+            Icon(Icons.person),
             SizedBox(width: 10),
             Text(
               widget.username,
@@ -267,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final dashboardKey = dashboardEntries?[index].key;
-                          final dashboardValue = dashboardEntries?[index].value;
+                          // final dashboardValue = dashboardEntries?[index].value;
                           
                           return GestureDetector(
                             onTap: () {
@@ -392,63 +391,148 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-
-      floatingActionButton: FloatingActionButton(onPressed: () async {
-        final result = await showDialog<DashboardProvider>(
-          context: context,
-          builder: (context) {
-            String title = '';
-            return AlertDialog(
-              title: Text('Add New Dashboard'),
-              content: TextField(
-                decoration: InputDecoration(labelText: 'Dashboard Title'),
-                onChanged: (value) => title = value,
-              ),
-              actions: [
-                TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
-                TextButton(
-                  onPressed: () {
-                    if (title.isNotEmpty) {
-                      Navigator.pop(context, DashboardProvider(title: title, icon: Icons.edit));
-                    } 
-                  },
-                  child: Text('Add'),
-                ),
-              ],
+      floatingActionButton: 
+        FloatingActionButton(
+          onPressed: () async {
+          // setState(() {
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+            
+            // cards.add(
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TambahDashboard(username: widget.username,))
             );
-          },
-        );
-        if (result != null) {
-          final userProvider = Provider.of<UserProvider>(context, listen: false);
-          userProvider.addDashboard(widget.username, result);
-          setState(() {
-            dashboards = userProvider.userDashboard[widget.username];
-          });
-        }
-      }, 
-        child: Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+            if (result != null) {
+              final userProvider = Provider.of<UserProvider>(context, listen: false);
+              userProvider.addDashboard(widget.username, result);
+              setState(() {
+                dashboards = userProvider.userDashboard[widget.username];
+              });
+            }
 
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        shape: CircularNotchedRectangle(),
-        elevation: 5,
-        notchMargin: 6,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(icon: Icon(Icons.settings, color: Colors.blue), onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Setting()));
-              }),
-              IconButton(icon: Icon(Icons.home, color: Colors.blue), onPressed: () {}),
-              IconButton(icon: Icon(Icons.email, color: Colors.blue), onPressed: () {}),
-            ],
-          ),
+            // if (result != null && result is String && result.trim().isNotEmpty) {
+            //   setState(() {
+            //     cards.add({
+            //       'title': result.trim(),
+            //       'icon': Icons.new_label,
+            //       'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+
+            //     });
+
+            //     items.add({
+            //       'title': result.trim(),
+            //       'icon': Icons.new_label,});
+            //   });
+            // }
+            //   {
+            //     'title': 'Class Notes',
+            //     'icon': Icons.edit,
+            //     'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+            //   },
+            // );
+            // items.add(
+            //   {'icon': Icons.edit, 'title': '${items.length + 1}'},
+            // );
+          // });
+        }, 
+          child: Icon(Icons.add),
+          
+        ),
+
+      // floatingActionButton: FloatingActionButton(onPressed: () async {
+      //   final result = await showDialog<DashboardProvider>(
+      //     context: context,
+      //     builder: (context) {
+      //       String title = '';
+      //       return AlertDialog(
+      //         title: Text('Add New Dashboard'),
+      //         content: TextField(
+      //           decoration: InputDecoration(labelText: 'Dashboard Title'),
+      //           onChanged: (value) => title = value,
+      //         ),
+      //         actions: [
+      //           TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+      //           TextButton(
+      //             onPressed: () {
+      //               if (title.isNotEmpty) {
+      //                 Navigator.pop(context, DashboardProvider(title: title, icon: Icons.edit));
+      //               } 
+      //             },
+      //             child: Text('Add'),
+      //           ),
+      //         ],
+      //       );
+      //     },
+      //   );
+      //   if (result != null) {
+      //     final userProvider = Provider.of<UserProvider>(context, listen: false);
+      //     userProvider.addDashboard(widget.username, result);
+      //     setState(() {
+      //       dashboards = userProvider.userDashboard[widget.username];
+      //     });
+      //   }
+      // }, 
+      //   child: Icon(Icons.add),
+      // ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text(widget.username), 
+              accountEmail: Text('${widget.username}@gmail.com'),
+              currentAccountPicture: Icon(Icons.person),
+            ),
+            // DrawerHeader(
+            //   decoration: BoxDecoration(color: Colors.blue),
+            //   child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
+            // ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Setting()));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('About'),
+              onTap: () {
+                // Aksi untuk email
+                Navigator.push(context, MaterialPageRoute(builder: (context) => About()));
+              },
+            ),
+          ],
         ),
       ),
+      // bottomNavigationBar: BottomAppBar(
+      //   color: Colors.white,
+      //   shape: CircularNotchedRectangle(),
+      //   elevation: 5,
+      //   notchMargin: 6,
+      //   child: Padding(
+      //     padding: const EdgeInsets.symmetric(horizontal: 20),
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       children: [
+      //         IconButton(icon: Icon(Icons.settings, color: Colors.blue), onPressed: () {
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => Setting()));
+      //         }),
+      //         IconButton(icon: Icon(Icons.home, color: Colors.blue), onPressed: () {}),
+      //         IconButton(icon: Icon(Icons.email, color: Colors.blue), onPressed: () {}),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
