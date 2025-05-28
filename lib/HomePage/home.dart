@@ -1,4 +1,5 @@
 import 'package:activity_tracker/DashBoard/DashBoard.dart';
+import 'package:activity_tracker/DashBoard/TambahDashboard.dart';
 import 'package:activity_tracker/HomePage/setting.dart';
 import 'package:flutter/material.dart';
 
@@ -6,11 +7,18 @@ class HomePage extends StatefulWidget {
   final username;
   const HomePage({super.key, required this.username});
 
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+  bool editJudulDash = false;
+  String judul ="Judul";
+
+  final TextEditingController _controllerEditJudul = TextEditingController();
+
 
   final List<Map<String, dynamic>> cards = [
     {
@@ -28,11 +36,7 @@ class _HomePageState extends State<HomePage> {
       'icon': Icons.group,
       'imageUrl': 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61',
     },
-    {
-      'title': 'Final Project Draft',
-      'icon': Icons.assignment,
-      'imageUrl': 'https://images.unsplash.com/photo-1559027615-0281db1ee92b',
-    },
+    
   ];
 
   final List<Map<String, dynamic>> items = [
@@ -290,7 +294,31 @@ class _HomePageState extends State<HomePage> {
                                   Icon(item['icon'], color: Colors.black),
                                   SizedBox(width: 12),
                                   Expanded(
-                                    child: Text(
+                                    child: 
+                                      (editJudulDash) ?
+                                        TextField(
+                                          controller: _controllerEditJudul,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none
+                                          ),
+                                          onSubmitted: (value) {
+                                            setState(() {
+                                              
+                                              item['title']=value;
+                                              
+                                            editJudulDash= false;
+                                            });
+
+
+                                          },
+                                        )
+                                      : 
+                                        Text(
+
+                                      
+                                        
+                                      //edit
+                                      // item['title'],
                                       item['title'],
                                       style: TextStyle(
                                         color: Colors.black87,
@@ -299,17 +327,20 @@ class _HomePageState extends State<HomePage> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: Icon(Icons.more_vert, color: Colors.grey[800]),
-                                    onPressed: () {
-                                      
-                                    },
-                                  ),
-                                  IconButton(onPressed:(){}, icon:Icon(Icons.add, color: Colors.lightBlue), ),
-                                  IconButton(onPressed:(){
-                                    showDialog(context: context, 
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
+                                  PopupMenuButton(
+                                    icon: Icon(Icons.more_vert),
+                                    onSelected: (value) {
+                                      if(value == 'edit'){
+                                        setState(() {
+                                          editJudulDash=true;
+                                        });
+                                        //aksi
+                                      }
+                                      else if(value == 'delete'){
+                                        showDialog(
+                                          context: context, 
+                                          builder: (BuildContext context){
+                                          return AlertDialog(
                                           title: Text('Hapus Item'),
                                           content: Text('Yakin ingin menghapus "${items[index]['title']}"?'),
                                           actions: [
@@ -323,6 +354,7 @@ class _HomePageState extends State<HomePage> {
                                               onPressed: () {
                                                 setState(() {
                                                   items.removeAt(index);
+                                                  cards.removeAt(index);
                                                 });
                                                 Navigator.of(context).pop(); // Tutup dialog
                                               },
@@ -330,9 +362,54 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ],
                                         );
+                                          }
+                                        );
+                                        
                                       }
-                                    );
-                                  }, icon:Icon(Icons.delete, color: Colors.grey[800]), ),
+                                      else if(value == ""){
+
+                                      }
+                                    },
+                                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                      PopupMenuItem <String>(value: 'edit', child: Text("edit"),),
+                                      PopupMenuItem <String>(value: 'delete', child: Text("delete"),),
+                                    ]
+                                  ),
+                                  // IconButton(
+                                  //   icon: Icon(Icons.more_vert, color: Colors.grey[800]),
+                                  //   onPressed: () {
+                                      
+                                  //   },
+                                  // ),
+                                  // IconButton(onPressed:(){}, icon:Icon(Icons.add, color: Colors.lightBlue), ),
+                                  // IconButton(onPressed:(){
+                                  //   showDialog(context: context, 
+                                  //     builder: (BuildContext context) {
+                                  //       return AlertDialog(
+                                  //         title: Text('Hapus Item'),
+                                  //         content: Text('Yakin ingin menghapus "${items[index]['title']}"?'),
+                                  //         actions: [
+                                  //           TextButton(
+                                  //             onPressed: () {
+                                  //               Navigator.of(context).pop(); // Tutup dialog
+                                  //             },
+                                  //             child: Text('Batal'),
+                                  //           ),
+                                  //           TextButton(
+                                  //             onPressed: () {
+                                  //               setState(() {
+                                  //                 items.removeAt(index);
+                                  //                 cards.removeAt(index);
+                                  //               });
+                                  //               Navigator.of(context).pop(); // Tutup dialog
+                                  //             },
+                                  //             child: Text('Hapus'),
+                                  //           ),
+                                  //         ],
+                                  //       );
+                                  //     }
+                                  //   );
+                                  // }, icon:Icon(Icons.delete, color: Colors.grey[800]), ),
                                 ],
                               ),
                             )
@@ -350,23 +427,46 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        setState(() {
-          cards.add(
-            {
-              'title': 'Class Notes',
-              'icon': Icons.edit,
-              'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
-            },
-          );
-          items.add(
-            {'icon': Icons.edit, 'title': '${items.length + 1}'},
-          );
-        });
-      }, 
-        child: Icon(Icons.add),
-        
-      ),
+      floatingActionButton: 
+        FloatingActionButton(
+          onPressed: () async {
+          // setState(() {
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+            
+            // cards.add(
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TambahDashboard())
+            );
+
+            if (result != null && result is String && result.trim().isNotEmpty) {
+              setState(() {
+                cards.add({
+                  'title': result.trim(),
+                  'icon': Icons.new_label,
+                  'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+
+                });
+
+                items.add({
+                  'title': result.trim(),
+                  'icon': Icons.new_label,});
+              });
+            }
+            //   {
+            //     'title': 'Class Notes',
+            //     'icon': Icons.edit,
+            //     'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+            //   },
+            // );
+            // items.add(
+            //   {'icon': Icons.edit, 'title': '${items.length + 1}'},
+            // );
+          // });
+        }, 
+          child: Icon(Icons.add),
+          
+        ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
 
       bottomNavigationBar: BottomAppBar(

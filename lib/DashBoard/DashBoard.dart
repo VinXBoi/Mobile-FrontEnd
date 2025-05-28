@@ -16,6 +16,15 @@ class DashBoardPage extends StatefulWidget {
 }
 
 class _DashBoardPageState extends State<DashBoardPage> {
+
+  bool tampilBorderComment = true;
+  bool editJudul = false;
+  String judul = "Judul Awal";
+
+
+  final TextEditingController judulController = TextEditingController();
+  // final TextEditingController commen = TextEditingController();
+
   final TextEditingController commentController = TextEditingController();
   final List<String> _comments = [];
   final List<Task> tasks = [
@@ -33,11 +42,11 @@ class _DashBoardPageState extends State<DashBoardPage> {
   }
 
   void addNewTask() {
-    setState(() {
-      tasks.add(Task(
-        title: 'New Task ${tasks.length + 1}',
-      ));
-    });
+    // setState(() {
+    //   tasks.add(Task(
+    //     title: 'New Task ${tasks.length + 1}',
+    //   ));
+    // });
   }
 
   @override
@@ -74,14 +83,45 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   const Divider(thickness: 1, height: 24),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.school, size: 40),
                       SizedBox(width: 12),
                       Expanded(
-                        child: Text(
-                          'Research Paper Planner',
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
+                        child: Row(
+                          children: [
+                            editJudul?
+                              Expanded(
+                                child: TextField(
+                                  controller: judulController,
+                                  
+                                  decoration: InputDecoration(
+                                    // labelText: judul,
+                                    hintText: judul,
+                                  ),
+                                  onSubmitted: (value){
+                                    setState(() {
+                                      judul = value;
+                                      editJudul = false;
+                                    });
+                                  },
+                                
+                                ),
+                              )
+                            :
+                            Text(judul,
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                            // Expanded(child: Text("")),
+                            Spacer(),
+                            IconButton(
+                              onPressed: (){
+                                setState(() {
+                                  editJudul = true;
+                                });
+                            }, icon: Icon(Icons.edit)),
+                          ],
+                        )
+
                       ),
                     ],
                   ),
@@ -95,14 +135,24 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       filled: true,
                       fillColor: Colors.grey[100],
                       prefixIcon: const Icon(Icons.comment),
-                      border: OutlineInputBorder(
+                      border: tampilBorderComment? OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                      ),
+                      ): InputBorder.none,
                     ),
                     onSubmitted: (value) {
                       if (value.isNotEmpty) {
+                        setState(() {
+                          tampilBorderComment = false;
+                        });
+                        
                         addComment(value);
-                        commentController.clear();
+                        
+                        // commentController.clear();
+                      }
+                      else{
+                        setState(() {
+                          tampilBorderComment = true;
+                        });
                       }
                     },
                   ),
@@ -251,21 +301,31 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       final task = tasks[index];
-                      return Card(
-                        child: ListTile(
-                          title: Text(task.title),
-                        ),
+                      return 
+                      Card(
+                        child: 
+                          ListTile(
+                            title: Text(task.title),
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Newpage()));
+                            },
+                          ),
+                          
+                        
                       );
                     },
                   ),
                   const SizedBox(height: 16),
 
                   ElevatedButton.icon(
-                  onPressed: addNewTask,
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Newpage()) );
+                  },
                   icon: const Icon(Icons.add),
-                  label: const Text('New Page'),
+                  label: const Text('New Plan'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -355,11 +415,11 @@ class _DashBoardPageState extends State<DashBoardPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.pushReplacement(context, 
-          MaterialPageRoute(builder: (context) => Newpage())
-        );
-      }, child: Icon(Icons.add),),
+      // floatingActionButton: FloatingActionButton(onPressed: (){
+      //   Navigator.pushReplacement(context, 
+      //     MaterialPageRoute(builder: (context) => Newpage())
+      //   );
+      // }, child: Icon(Icons.add),),
     );
   }
 }

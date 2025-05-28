@@ -10,6 +10,8 @@ class Newpage extends StatefulWidget {
 
 class _NewpageState extends State<Newpage> {
   bool isDone = false;
+  final TextEditingController _judulPlan = TextEditingController();
+  String judul = "";
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class _NewpageState extends State<Newpage> {
           icon: Icon(Icons.arrow_back_ios_rounded),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text("New Page"),
+        title: Text("New Plan"),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         actions: [
@@ -47,6 +49,29 @@ class _NewpageState extends State<Newpage> {
             // Done Row
             Row(
               children: [
+                Text("Judul: ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: _judulPlan,
+                    decoration: InputDecoration(
+                      hintText: "tes",
+                  
+                  
+                    ),
+                  
+                  ),
+                ),
+              ],
+            ),
+            
+            Row(
+              children: [
+                
+                
                 Icon(Icons.check_box_outlined),
                 SizedBox(width: 8),
                 Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
@@ -178,11 +203,17 @@ class _NewpageState extends State<Newpage> {
             ),
             SizedBox(height: 16,),
             Row(children: [
-              Expanded(child: TextButton(onPressed: (){
-                Navigator.pushReplacement(context, 
-                  MaterialPageRoute(builder: (context) => DashBoardPage())
-                );
-              }, child: Text("Save Task")))
+              Expanded(
+                child: 
+                  TextButton(
+                    onPressed: (){
+                      Navigator.pop(context);
+                      // Navigator.pushReplacement(context, 
+                      //   MaterialPageRoute(builder: (context) => DashBoardPage())
+                      // );
+                    }, child: Text("Save Task")
+                  )
+              )
 
             ],)
           ],
