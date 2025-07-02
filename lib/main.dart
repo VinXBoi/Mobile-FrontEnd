@@ -13,14 +13,17 @@ void main() {
 
 class UserProvider extends ChangeNotifier {
   List<User> listUser = [User(username: 'admin', password: 'admin')];
-  Map<String, Map<DashboardProvider,List<TaskProvider>>> userDashboard = {
+
+  Map<String, Map<DashboardProvider,Map<String, List<TaskProvider>>>> userDashboard = {
     'admin' :  {
-      DashboardProvider(title: 'Class Notes', icon: Icons.edit) : [
-        TaskProvider(title: 'Default Task 1'),
-        TaskProvider(title: 'Default Task 2'),
-      ] 
+      DashboardProvider(title: 'IF-B CLASS', icon: Icons.edit) : {
+        'Not Started' : [TaskProvider(title: 'Task 1'),],
+        'In Progress' : [TaskProvider(title: 'Task 2'),],
+        'Completed' : [TaskProvider(title: 'Task 3'),],
+      }
     }
   };
+
   void addUser(String username, String password) {
     listUser.add(User(username: username, password: password));
     userDashboard[username] = {};
@@ -28,7 +31,12 @@ class UserProvider extends ChangeNotifier {
   }
 
   void addDashboard(String username, DashboardProvider dashboard) {
-    userDashboard[username]![dashboard] = [];
+    userDashboard[username] ??= {};
+    userDashboard[username]![dashboard] = {
+      'Not Started': [],
+      'In Progress': [],
+      'Completed': [],
+    };
     notifyListeners();
   }
 
@@ -40,19 +48,28 @@ class UserProvider extends ChangeNotifier {
   void editDashboard(String username, DashboardProvider oldDashboard, DashboardProvider newDashboard) {
     final dashboards = userDashboard[username];
     if (dashboards != null && dashboards.containsKey(oldDashboard)) {
-      final tasks = dashboards[oldDashboard];
+      final taskMap = dashboards[oldDashboard];
       dashboards.remove(oldDashboard);
-      dashboards[newDashboard] = tasks ?? [];
+      dashboards[newDashboard] = taskMap ?? {
+        'Not Started': [],
+        'In Progress': [],
+        'Completed': [],
+      };
       notifyListeners();
     }
   }
 
-
-  void addTask(String username, DashboardProvider dashboard, TaskProvider task) {
-    userDashboard[username]![dashboard]!.add(task);
+  void addTask(String username, DashboardProvider dashboard, String status, TaskProvider task) {
+    userDashboard[username]?[dashboard]?[status]?.add(task);
     notifyListeners();
   }
 
+  void editStatusTask(String username, DashboardProvider dashboard, TaskProvider task, String fromStatus, String toStatus) {
+    if (userDashboard[username]?[dashboard]?[fromStatus]?.remove(task) ?? false) {
+      userDashboard[username]?[dashboard]?[toStatus]?.add(task);
+      notifyListeners();
+    }
+  }
 
 }
 
@@ -72,10 +89,13 @@ class TaskProvider {
   TaskProvider({required this.title});  
 }
 
+class ClassProvider {
+  
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

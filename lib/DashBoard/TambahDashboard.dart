@@ -2,7 +2,7 @@ import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 
 class TambahDashboard extends StatefulWidget {
-  final username;
+  final String username;
   const TambahDashboard({super.key, required this.username});
 
   @override

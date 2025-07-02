@@ -41,7 +41,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    final List<TaskProvider> dashboardTasks = userProvider.userDashboard[widget.username]?[widget.dashboard] ?? [];
+    final dashboardMap = userProvider.userDashboard[widget.username]?[widget.dashboard] ?? {};
+    final dashboardTasks = [
+      ...?dashboardMap['Not Started'],
+      ...?dashboardMap['In Progress'],
+      ...?dashboardMap['Completed'],
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -64,7 +70,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      'https://www.hdwallpapers.in/download/ganyu_xiao_zhongli_4k_hd_genshin_impact-HD.jpg',
+                      'https://th.bing.com/th/id/OIP.pezNdQ9kxCrHYXGm64KPaQHaEK?rs=1&pid=ImgDetMain',
                       height: 180,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -108,7 +114,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ),
                   const SizedBox(height: 24),
                   const Divider(thickness: 1, height: 24),
-                  Kanban(),
+                  Kanban(username: widget.username, dashboard: widget.dashboard),
                   const Divider(thickness: 1, height: 24),
                   Row(spacing: 10,children: [
                     Icon(Icons.star),
@@ -262,7 +268,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
                   ElevatedButton.icon(
                     onPressed: () {
-                      userProvider.addTask(widget.username, widget.dashboard, TaskProvider(title: 'Default Task'));
+                      userProvider.addTask(widget.username, widget.dashboard, 'Not Started',TaskProvider(title: 'Default Task'));
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -270,6 +276,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
                             duration: Duration(seconds: 4),
                           ),
                         );
+                      });
+                      setState(() {
+                        
                       });
                     },
                     icon: const Icon(Icons.add),
@@ -365,11 +374,11 @@ class _DashBoardPageState extends State<DashBoardPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.pushReplacement(context, 
-          MaterialPageRoute(builder: (context) => Newpage())
-        );
-      }, child: Icon(Icons.add),),
+      // floatingActionButton: FloatingActionButton(onPressed: (){
+      //   Navigator.pushReplacement(context, 
+      //     MaterialPageRoute(builder: (context) => Newpage())
+      //   );
+      // }, child: Icon(Icons.add),),
     );
   }
 }

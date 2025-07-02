@@ -309,9 +309,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         Navigator.push(context, 
                           MaterialPageRoute(builder: (context) => LoginPage())
                         );
-                      
-                        
-
                       }, 
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(Colors.blue),

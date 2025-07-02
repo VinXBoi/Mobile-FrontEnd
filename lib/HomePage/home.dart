@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Map<DashboardProvider, List<TaskProvider>>? dashboards;
+  Map<DashboardProvider, Map<String, List<TaskProvider>>>? dashboards;
 
   final List<Map<String, dynamic>> cards = [
     {
