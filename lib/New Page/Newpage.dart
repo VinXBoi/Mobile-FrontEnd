@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:activity_tracker/DashBoard/DashBoard.dart';
 
 class Newpage extends StatefulWidget {
   const Newpage({super.key});
@@ -8,168 +9,230 @@ class Newpage extends StatefulWidget {
 }
 
 class _NewpageState extends State<Newpage> {
-  bool isDone = false;
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+
+  int selectedTypeIndex = 2;
+  DateTime? selectedDate;
+  TimeOfDay? startTime;
+  TimeOfDay? endTime;
+  int selectedColorIndex = 0;
+  bool reminderOn = false;
+
+  final List<Color> colors = [
+    Colors.blue,
+    Colors.purple,
+    Colors.green,
+    Colors.pink,
+    Colors.orange,
+    Colors.grey,
+  ];
+  final List<String> types = ["Event", "Meet", "Tasks"];
+  
+  String? selectedStatus;
+  final List<String> statusList = ['Completed', 'In Progress', 'Not Started'];
+
+  Future<void> pickDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  Future<void> pickTime({required bool isStart}) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStart) {
+          startTime = picked;
+        } else {
+          endTime = picked;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("New Task"),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_rounded),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text("New Page"),
-        backgroundColor: Colors.blue[200],
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.drive_folder_upload_outlined),
-          ),
-          IconButton(onPressed: () {}, icon: Icon(Icons.message_outlined)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
-        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Title
-            // Text(
-            //   "New Page",
-            //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            // ),
-            // SizedBox(height: 8),
-            // Divider(thickness: 2),
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(labelText: "Title"),
+            ),
+            SizedBox(height: 16),
 
-            // Done Row
+            // Type
+            Row(
+              children: List.generate(types.length, (index) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(types[index]),
+                    selected: selectedTypeIndex == index,
+                    onSelected: (_) {
+                      setState(() {
+                        selectedTypeIndex = index;
+                      });
+                    },
+                  ),
+                );
+              }),
+            ),
+            SizedBox(height: 16),
+
+            // Date Picker
             Row(
               children: [
-                Icon(Icons.check_box_outlined),
+                Icon(Icons.calendar_today, size: 20),
                 SizedBox(width: 8),
-                Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
-                SizedBox(width: 29),
-                Text(":", style: TextStyle(fontWeight: FontWeight.w600)),
-                SizedBox(width: 25),
-                Checkbox(
-                  value: isDone,
-                  onChanged: (value) {
+                Text(
+                  selectedDate == null
+                      ? 'Pick a Date'
+                      : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
+                ),
+                Spacer(),
+                TextButton(onPressed: pickDate, child: Text("Select")),
+              ],
+            ),
+            SizedBox(height: 16),
+
+            // Time Picker
+            Row(
+              children: [
+                Icon(Icons.access_time, size: 20),
+                SizedBox(width: 8),
+                Text(startTime == null ? "Start" : startTime!.format(context)),
+                Icon(Icons.arrow_right_alt),
+                Text(endTime == null ? "End" : endTime!.format(context)),
+                Spacer(),
+                TextButton(
+                  onPressed: () => pickTime(isStart: true),
+                  child: Text("Start"),
+                ),
+                TextButton(
+                  onPressed: () => pickTime(isStart: false),
+                  child: Text("End"),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: selectedStatus,
+              decoration: InputDecoration(
+                labelText: "Status",
+                border: OutlineInputBorder(),
+              ),
+              items:
+                  statusList.map((status) {
+                    return DropdownMenuItem(value: status, child: Text(status));
+                  }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedStatus = value!;
+                });
+              },
+            ),
+            SizedBox(height: 16),
+
+            // Note
+            TextField(
+              controller: _noteController,
+              decoration: InputDecoration(labelText: "Note (Description)"),
+            ),
+            SizedBox(height: 16),
+
+            // Location
+            TextField(
+              controller: _locationController,
+              decoration: InputDecoration(labelText: "Location"),
+            ),
+            SizedBox(height: 16),
+
+            // Color Picker
+            Text("Colors"),
+            SizedBox(height: 8),
+            Row(
+              children: List.generate(colors.length, (index) {
+                return GestureDetector(
+                  onTap: () {
                     setState(() {
-                      isDone = value!;
+                      selectedColorIndex = index;
                     });
                   },
-                  activeColor: Colors.blue,
-                  checkColor: Colors.white,
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-
-            // Due Date Row
-            Row(
-              children: [
-                Icon(Icons.date_range),
-                SizedBox(width: 8),
-                Text(
-                  "Due Date :",
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                SizedBox(width: 30),
-                Text("Empty"),
-              ],
-            ),
-            SizedBox(height: 20),
-
-            // Tag Row with Chips
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(Icons.local_offer),
-                SizedBox(width: 8),
-                Text("Tag", style: TextStyle(fontWeight: FontWeight.w600)),
-                SizedBox(width: 38),
-                Text(":", style: TextStyle(fontWeight: FontWeight.w600)),
-                SizedBox(width: 20),
-                Expanded(
-                  child: Wrap(
-                    spacing: 6,
-                    children: const [
-                      Chip(label: Text("#Coding")),
-                      Chip(label: Text("#FrontEnd")),
-                      Chip(label: Text("#AI")),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-
-            // Priority Row
-            Row(
-              children: [
-                Icon(Icons.format_list_bulleted_add),
-                SizedBox(width: 8),
-
-                // Text "Priority"
-                Text("Priority", style: TextStyle(fontWeight: FontWeight.w600)),
-
-                // Spacer kecil
-                SizedBox(width: 16),
-
-                // Titik dua
-                Text(":", style: TextStyle(fontWeight: FontWeight.w600)),
-
-                // Spacer agar "Empty" geser ke kanan
-                SizedBox(width: 30),
-
-                Text("Empty"),
-              ],
-            ),
-
-            SizedBox(height: 20),
-
-            // Add Property Row
-            Row(
-              children: [
-                Icon(Icons.add),
-                SizedBox(width: 8),
-                Text("Add a property"),
-              ],
-            ),
-            SizedBox(height: 20),
-
-            // Comments Section
-            Text("Comments", style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Row(
-              children: [
-                CircleAvatar(radius: 14, child: Icon(Icons.person, size: 14)),
-                SizedBox(width: 10),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Add a comment...",
-                      labelStyle: TextStyle(color: Colors.grey),
-                      border: InputBorder.none,
+                  child: Container(
+                    margin: EdgeInsets.only(right: 10),
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: colors[index],
+                      shape: BoxShape.circle,
+                      border:
+                          selectedColorIndex == index
+                              ? Border.all(color: Colors.black, width: 2)
+                              : null,
                     ),
                   ),
-                ),
-              ],
+                );
+              }),
             ),
-            Divider(thickness: 2),
-            SizedBox(height: 10),
+            SizedBox(height: 16),
 
-            // Footer
-            Row(
-              children: [Text("Tap here to continue with an empty page, or ")],
+            // Reminder Switch
+            SwitchListTile(
+              value: reminderOn,
+              onChanged: (val) {
+                setState(() {
+                  reminderOn = val;
+                });
+              },
+              title: Text("Set Reminder"),
             ),
+            SizedBox(height: 16),
+
+            // Save/Cancel
             Row(
               children: [
-                Text(
-                  "create a template",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Cancel"),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      print("Saved: ${_titleController.text}");
+                      // You can pass the data here
+                    },
+                    child: Text("Save"),
                   ),
                 ),
               ],
