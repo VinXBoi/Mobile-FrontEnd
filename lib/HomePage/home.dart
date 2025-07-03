@@ -1,269 +1,627 @@
+import 'package:activity_tracker/DashBoard/DashBoard.dart';
+import 'package:activity_tracker/DashBoard/TambahDashboard.dart';
+import 'package:activity_tracker/HomePage/about.dart';
+import 'package:activity_tracker/HomePage/setting.dart';
+import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class HomePage extends StatefulWidget {
+  final username;
+  const HomePage({super.key, required this.username});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomePageState extends State<HomePage> {
+  Map<DashboardProvider, List<TaskProvider>>? dashboards;
+
+  final List<Map<String, dynamic>> cards = [
+    {
+      'title': 'Class Notes',
+      'icon': Icons.edit,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+    },
+    {
+      'title': 'Research Paper Planner',
+      'icon': Icons.school,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
+    },
+    {
+      'title': 'Group Meeting Notes',
+      'icon': Icons.group,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61',
+    },
+    {
+      'title': 'Final Project Draft',
+      'icon': Icons.assignment,
+      'imageUrl': 'https://images.unsplash.com/photo-1559027615-0281db1ee92b',
+    },
+  ];
+
+  late String selectedUsername;
+  final List<String> availableUsers = [
+    'userA',
+    'userB',
+    'userC',
+  ]; // Contoh akun
+
+  final ScrollController _scrollController = ScrollController();
+
+  void _scrollLeft() {
+    _scrollController.animateTo(
+      _scrollController.offset - 180,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
+  }
+
+  void _scrollRight() {
+    _scrollController.animateTo(
+      _scrollController.offset + 180,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedUsername = widget.username;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login Berhasil'),
+          duration: Duration(seconds: 4),
+        ),
+      );
+    });
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    dashboards = userProvider.userDashboard[selectedUsername];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dashboardEntries = dashboards?.entries.toList();
     return Scaffold(
-      appBar: 
-        AppBar(
-          backgroundColor: Colors.blue,
-          toolbarHeight: 70,
-          leadingWidth: 700,
-          leading: Padding(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-          child: 
-            Row(
-              // mainAxisSize: MainAxisSize.min,
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CircleAvatar(
-                  radius: 23,
-                  backgroundImage: AssetImage("assets/tes.jpg"),
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "Teresia",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
+      appBar: AppBar(
+        // automaticallyImplyLeading: false,
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        elevation: 1,
+        titleSpacing: 0,
+        title: Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Icon(Icons.person),
+              SizedBox(width: 10),
+              Text(selectedUsername, style: TextStyle(fontSize: 18)),
+              SizedBox(width: 5),
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  setState(() {
+                    selectedUsername = value;
+                    final userProvider = Provider.of<UserProvider>(
+                      context,
+                      listen: false,
+                    );
+                    dashboards = userProvider.userDashboard[selectedUsername];
+                  });
+                },
+                itemBuilder: (BuildContext context) {
+                  return availableUsers
+                      .where((user) => user != selectedUsername)
+                      .map(
+                        (user) => PopupMenuItem<String>(
+                          value: user,
+                          child: Text(user),
+                        ),
+                      )
+                      .toList();
+                },
+                icon: Icon(Icons.arrow_drop_down, color: Colors.white),
+                padding: EdgeInsets.zero,
+              ),
             ],
           ),
         ),
 
-        //APPBAR KANAN
         actions: [
+          Container(
+            width: MediaQuery.of(context).size.width * 0.35,
+            height: 43,
+            child: TextField(
+              maxLines: 1, //supaya cuma bisa ngisi satu bar
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 10,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(90),
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                hintText: 'Pencarian',
+              ),
+            ),
+          ),
+          SizedBox(width: 2),
           Padding(
-            padding: EdgeInsets.only(right:3),
-            child: 
-              Row(
+            padding: EdgeInsets.only(right: 3),
+            child: IconButton(icon: Icon(Icons.search), onPressed: () {}),
+          ),
+          SizedBox(width: 10),
+          // IconButton(
+          //   icon: Icon(Icons.menu, color: Colors.black87),
+          //   onPressed: () {},
+          // )
+        ],
+      ),
+
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 5, bottom: 5),
+              child: Row(
+                children: [Text("Dashboard", style: TextStyle(fontSize: 20))],
+              ),
+            ),
+            // Scrollable Card with Arrows
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              child: Row(
                 children: [
-                  //Supaya gak overflow
-                  Container(
-                    width: 
-                      MediaQuery.of(context).size.width*0.35,
-                    height: 43,
-                        child: 
-                          TextField(
-                            maxLines: 1,//supaya cuma bisa ngisi satu bar
-                            decoration: 
-                              InputDecoration(
-                                contentPadding: 
-                                  EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                enabledBorder: 
-                                  OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(90),
-                                    borderSide: BorderSide(color: Colors.blue)
-                                  ),
-                                filled: true,
-                                fillColor: Colors.white,
-                                hintText: 'Pencarian',
-                              ),
-                          ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios_new, size: 18),
+                    onPressed: _scrollLeft,
                   ),
-                  SizedBox(width:2),
-                  Padding(
-                    padding: EdgeInsets.only(right: 3), 
-                    child: 
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {},
+                  Expanded(
+                    child: SizedBox(
+                      height: 120,
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: cards.length,
+                        itemBuilder: (context, index) {
+                          final card = cards[index];
+                          return GestureDetector(
+                            onTap: () {
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+                            },
+                            child: Container(
+                              width: 160,
+                              margin: EdgeInsets.only(right: 12),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                image: DecorationImage(
+                                  image: NetworkImage(card['imageUrl']),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: Stack(
+                                children: [
+                                  // Gradient overlay
+                                  Positioned.fill(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.black.withOpacity(0.7),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  // Title and icon
+                                  Positioned(
+                                    left: 12,
+                                    bottom: 12,
+                                    right: 12,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          card['icon'],
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          card['title'],
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    // ),
-                  )
-                  
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_forward_ios, size: 18),
+                    onPressed: _scrollRight,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 5, bottom: 5),
+              child: Row(
+                children: [Text("Private", style: TextStyle(fontSize: 20))],
+              ),
+            ),
+
+            // List bawah (sliver list)
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        mainAxisSpacing: 10,
+                        mainAxisExtent: 60,
+                      ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final dashboardKey = dashboardEntries?[index].key;
+                        // final dashboardValue = dashboardEntries?[index].value;
+
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => DashBoardPage(
+                                      username: widget.username,
+                                      dashboard: dashboardKey,
+                                    ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_right,
+                                  color: theme.primaryColor,
+                                ),
+                                SizedBox(width: 10),
+                                Icon(dashboardKey?.icon, color: Colors.black),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    dashboardKey!.title,
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 15,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                PopupMenuButton(
+                                  icon: Icon(Icons.more_vert),
+                                  onSelected: (value) {
+                                    if (value == 'edit') {
+                                      String editedTitle = dashboardKey.title;
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Edit Dashboard'),
+                                            content: TextField(
+                                              controller: TextEditingController(
+                                                text: dashboardKey.title,
+                                              ),
+                                              decoration: InputDecoration(
+                                                labelText: 'New Title',
+                                              ),
+                                              onChanged:
+                                                  (value) =>
+                                                      editedTitle = value,
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed:
+                                                    () =>
+                                                        Navigator.pop(context),
+                                                child: Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  if (editedTitle.isNotEmpty) {
+                                                    final userProvider =
+                                                        Provider.of<
+                                                          UserProvider
+                                                        >(
+                                                          context,
+                                                          listen: false,
+                                                        );
+                                                    userProvider.editDashboard(
+                                                      widget.username,
+                                                      dashboardKey,
+                                                      DashboardProvider(
+                                                        title: editedTitle,
+                                                        icon: dashboardKey.icon,
+                                                      ),
+                                                    );
+                                                    setState(() {
+                                                      dashboards =
+                                                          userProvider
+                                                              .userDashboard[widget
+                                                              .username];
+                                                    });
+                                                  }
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Save'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    } else if (value == 'delete') {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Hapus Item'),
+                                            content: Text(
+                                              'Yakin ingin menghapus "${dashboardKey.title}"?',
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Batal'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  final userProvider =
+                                                      Provider.of<UserProvider>(
+                                                        context,
+                                                        listen: false,
+                                                      );
+                                                  userProvider.removeDashboard(
+                                                    widget.username,
+                                                    dashboardKey,
+                                                  );
+                                                  setState(() {
+                                                    dashboards =
+                                                        userProvider
+                                                            .userDashboard[widget
+                                                            .username];
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Hapus'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                  itemBuilder:
+                                      (BuildContext context) =>
+                                          <PopupMenuEntry<String>>[
+                                            PopupMenuItem<String>(
+                                              value: 'edit',
+                                              child: Text("Edit"),
+                                            ),
+                                            PopupMenuItem<String>(
+                                              value: 'delete',
+                                              child: Text("Hapus"),
+                                            ),
+                                          ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }, childCount: dashboardEntries?.length),
+                    ),
+                  ),
                 ],
               ),
             ),
           ],
-      ),
-
-      //BODY
-      body: 
-        Padding(
-          padding: EdgeInsets.only(right:10, left: 6),//BALIK
-          child: 
-            Column(
-              children: [
-                SizedBox(height: 10),
-                Row(
-                  children: [
-                    // Padding(
-                    //   padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.01),
-                      Row(
-                        spacing: 10,
-                        children: [
-                          //INI KATEGORI
-                          Chip(
-                            label: const Text('Kategori'),
-                            avatar: CircleAvatar(
-                              backgroundColor: Colors.grey.shade800,
-                            ),
-                          ),
-                          Chip(
-                            label: const Text('Favorit'),
-                            avatar: CircleAvatar(
-                              backgroundColor: Colors.grey.shade800,
-                            ),
-                          ),
-                        ],
-                      ),
-                    // ),
-                  ],
-                ),
-
-
-          //INI DASHBOARDNYA
-          Expanded(
-            child: 
-            Container(
-              padding: 
-                EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height*0.03, 
-                  left: MediaQuery.of(context).size.width*0.01,
-                ), 
-              child: 
-                GridView.builder(
-                  gridDelegate: 
-                    SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 5,
-                    ),
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return 
-                    Container(
-                      
-                      decoration: 
-                        BoxDecoration(
-                          border: Border.all(color: Colors.black, width:1),
-                          image: 
-                            DecorationImage(
-                              image: 
-                                AssetImage("assets/tes.jpg"),
-                                opacity: 0.3,
-                                fit: BoxFit.cover,
-                            ),
-                          borderRadius: 
-                            BorderRadius.circular(8),
-                          
-                        ),
-                        child: 
-                          Padding(
-                            padding: 
-                              EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width*0.01,
-                                right: MediaQuery.of(context).size.width*0.01,
-                                top: MediaQuery.of(context).size.height*0.01,
-                              ),
-                            child: 
-
-                              //BAGIAN JUDUL
-                              Row( 
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // SizedBox(
-                                  //   child: 
-                                      Text(
-                                          "Judul Dashboard ${index + 1}",
-                                          style: TextStyle(color: Colors.black, fontSize: MediaQuery.of(context).size.width*0.035)
-                                      ),
-                                      Expanded(child: Text("")),
-                                      IconButton(
-
-                                          // padding: EdgeInsets.zero,
-                                          // constraints: BoxConstraints(),
-                                          
-                                          icon: 
-                                            SizedBox(
-                                              // height: 0,
-                                              child:
-                                                Icon(
-                                              Icons.menu,
-                                              color: Colors.black,
-                                              size: MediaQuery.of(context).size.width * 0.05,  
-                                          ),
-                                            ),
-                                            
-                                          onPressed: (){
-                                          }, 
-                                        ),
-                                        
-                                        IconButton(
-                                          // constraints: BoxConstraints(),
-                                          // padding: EdgeInsets.zero,
-                                          onPressed: () {
-                                          },
-                                          icon: 
-                                            Icon( Icons.add,
-                                              color: Colors.black,
-                                              size: MediaQuery.of(context).size.width * 0.05,  
-                                          ),
-                                        ),
-                                  // ),
-                                  
-                                  // SizedBox(
-                                  //   child: 
-                                    // Row(
-                                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                                    //   // mainAxisAlignment: MainAxisAlignment.start,
-                                    //   children: [
-                                        
-                                    //   ],
-                                    // ),
-                                  // ),
-                            ],
-                          )
-                        ),
-                    );
-                  },
-                ),
-            ),
-)
-
-
-        ],
-      ),
-          
-          
         ),
-        
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        // backgroundColor: Colors.deepPurple,
-        child: const Icon(Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.person),
-              onPressed: () {},
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // setState(() {
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+
+          // cards.add(
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TambahDashboard(username: widget.username),
             ),
-            IconButton(
-              icon: Icon(Icons.home),
-              onPressed: () {},
+          );
+          if (result != null) {
+            final userProvider = Provider.of<UserProvider>(
+              context,
+              listen: false,
+            );
+            userProvider.addDashboard(widget.username, result);
+            setState(() {
+              dashboards = userProvider.userDashboard[widget.username];
+            });
+          }
+
+          // if (result != null && result is String && result.trim().isNotEmpty) {
+          //   setState(() {
+          //     cards.add({
+          //       'title': result.trim(),
+          //       'icon': Icons.new_label,
+          //       'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+
+          //     });
+
+          //     items.add({
+          //       'title': result.trim(),
+          //       'icon': Icons.new_label,});
+          //   });
+          // }
+          //   {
+          //     'title': 'Class Notes',
+          //     'icon': Icons.edit,
+          //     'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+          //   },
+          // );
+          // items.add(
+          //   {'icon': Icons.edit, 'title': '${items.length + 1}'},
+          // );
+          // });
+        },
+        child: Icon(Icons.add),
+      ),
+
+      // floatingActionButton: FloatingActionButton(onPressed: () async {
+      //   final result = await showDialog<DashboardProvider>(
+      //     context: context,
+      //     builder: (context) {
+      //       String title = '';
+      //       return AlertDialog(
+      //         title: Text('Add New Dashboard'),
+      //         content: TextField(
+      //           decoration: InputDecoration(labelText: 'Dashboard Title'),
+      //           onChanged: (value) => title = value,
+      //         ),
+      //         actions: [
+      //           TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+      //           TextButton(
+      //             onPressed: () {
+      //               if (title.isNotEmpty) {
+      //                 Navigator.pop(context, DashboardProvider(title: title, icon: Icons.edit));
+      //               }
+      //             },
+      //             child: Text('Add'),
+      //           ),
+      //         ],
+      //       );
+      //     },
+      //   );
+      //   if (result != null) {
+      //     final userProvider = Provider.of<UserProvider>(context, listen: false);
+      //     userProvider.addDashboard(widget.username, result);
+      //     setState(() {
+      //       dashboards = userProvider.userDashboard[widget.username];
+      //     });
+      //   }
+      // },
+      //   child: Icon(Icons.add),
+      // ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text(widget.username),
+              accountEmail: Text('${widget.username}@gmail.com'),
+              currentAccountPicture: Icon(Icons.person),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.note_alt_rounded),
+            // DrawerHeader(
+            //   decoration: BoxDecoration(color: Colors.blue),
+            //   child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
+            // ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Setting()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('About'),
+              onTap: () {
+                // Aksi untuk email
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => About()),
+                );
+              },
             ),
           ],
         ),
       ),
+      // bottomNavigationBar: BottomAppBar(
+      //   color: Colors.white,
+      //   shape: CircularNotchedRectangle(),
+      //   elevation: 5,
+      //   notchMargin: 6,
+      //   child: Padding(
+      //     padding: const EdgeInsets.symmetric(horizontal: 20),
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       children: [
+      //         IconButton(icon: Icon(Icons.settings, color: Colors.blue), onPressed: () {
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => Setting()));
+      //         }),
+      //         IconButton(icon: Icon(Icons.home, color: Colors.blue), onPressed: () {}),
+      //         IconButton(icon: Icon(Icons.email, color: Colors.blue), onPressed: () {}),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
