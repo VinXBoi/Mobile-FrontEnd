@@ -31,6 +31,9 @@ class _SettingState extends State<Setting> {
   // State untuk nada notifikasi (radio)
   NotificationTone _tone = NotificationTone.defaultTone;
 
+  String selectedSlackSetting = 'Off';
+  final List<String> slackOptions = ['Off', '+ Add Account'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,14 +91,15 @@ class _SettingState extends State<Setting> {
             workspaceDigest,
             (val) => setState(() => workspaceDigest = val),
           ),
-          buildSwitchItem(
+          buildDropdownItem(
             "Slack notifications",
-            "Receive notifications in your Slack workspace when you're mentioned in a page, database property, or comment",
-            slackNotifications,
-            (val) => setState(() => slackNotifications = val),
+            "Receive notification in you Slack workspace when you're mentioned in a page database property,or comment",
+            selectedSlackSetting,
+            slackOptions,
+            (val) => setState(() => selectedSlackSetting = val!),
           ),
 
-          SizedBox(height: 30),
+          SizedBox(height: 15),
           Text(
             "Nada Notifikasi",
             style: TextStyle(
@@ -104,6 +108,8 @@ class _SettingState extends State<Setting> {
               fontWeight: FontWeight.bold,
             ),
           ),
+
+          SizedBox(height: 15),
           Column(
             children: [
               RadioListTile<NotificationTone>(
@@ -139,7 +145,7 @@ class _SettingState extends State<Setting> {
             ],
           ),
           Divider(),
-          SizedBox(height: 30),
+          SizedBox(height: 15),
           Text(
             "Tasks",
             style: TextStyle(
@@ -167,7 +173,7 @@ class _SettingState extends State<Setting> {
           ),
 
           Divider(),
-          SizedBox(height: 20),
+          SizedBox(height: 15),
           if (isTaskNotificationEnabled)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,30 +241,94 @@ class _SettingState extends State<Setting> {
   }
 
   Widget buildSwitchItem(
-    String title,
-    String subtitle,
-    bool value,
-    Function(bool) onChanged,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SwitchListTile(
-          title: Text(title, style: TextStyle(color: Colors.black)),
-          subtitle: Text(
-            subtitle,
-            style: TextStyle(color: Colors.grey[600], fontSize: 13),
-          ),
-          value: value,
-          onChanged: onChanged,
-          activeColor: Colors.blue,
+  String title,
+  String subtitle,
+  bool value,
+  Function(bool) onChanged,
+) {
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TextStyle(color: Colors.black)),
+                  SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+            Switch(
+              value: value,
+              onChanged: onChanged,
+              activeColor: Colors.blue,
+            ),
+          ],
         ),
-        Divider(
-          color: Colors.grey[400], // Lebih terang agar terlihat
-          thickness: 1,
-          height: 8,
+      ),
+      Divider(
+        color: Colors.grey[400],
+        thickness: 1,
+        height: 8,
+      ),
+    ],
+  );
+}
+
+
+Widget buildDropdownItem(
+  String title,
+  String subtitle,
+  String currentValue,
+  List<String> options,
+  Function(String?) onChanged,
+) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TextStyle(color: Colors.black)),
+                  SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 16),
+            DropdownButton<String>(
+              value: currentValue,
+              onChanged: onChanged,
+              items:
+                  options.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+            ),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+      Divider(color: Colors.grey[400], thickness: 1, height: 8),
+    ],
+  );
+}
 }
