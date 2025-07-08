@@ -1,3 +1,4 @@
+import 'package:activity_tracker/DashBoard/Newpage.dart';
 import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -116,9 +117,21 @@ class Kanban extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: TextButton.icon(
-              onPressed: () {
-                final userProvider = Provider.of<UserProvider>(context, listen: false);
-                userProvider.addTask(username, dashboard, type, TaskProvider(title: 'Default Task'));
+              onPressed: () async {
+                final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => Newpage(status: type)));
+                if(result != null) {
+                  final userProvider = Provider.of<UserProvider>(context, listen: false);
+                  userProvider.addTask(username, dashboard, result['status'], TaskProvider(title: result['title']));
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Task berhasil ditambahkan'),
+                        duration: Duration(seconds: 4),
+                      ),
+                    );
+                  });
+                }
+                
               },
               icon: Icon(Icons.add, color: mainColor),
               label: Text(

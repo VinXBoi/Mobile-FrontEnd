@@ -1,4 +1,4 @@
-import 'package:activity_tracker/DashBoard/Newpage.dart';
+import 'package:activity_tracker/DashBoard/NewPage.dart';
 import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:activity_tracker/DashBoard/kanban.dart';
@@ -267,16 +267,21 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   const SizedBox(height: 16),
 
                   ElevatedButton.icon(
-                    onPressed: () {
-                      userProvider.addTask(widget.username, widget.dashboard, 'Not Started',TaskProvider(title: 'Default Task'));
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Task berhasil ditambahkan'),
-                            duration: Duration(seconds: 4),
-                          ),
-                        );
-                      });
+                    onPressed: () async {
+                      final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => Newpage(status: 'Not Started')));
+                      if(result != null) {
+                        final userProvider = Provider.of<UserProvider>(context, listen: false);
+                        userProvider.addTask(widget.username, widget.dashboard, result['status'], TaskProvider(title: result['title']));
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Task berhasil ditambahkan'),
+                              duration: Duration(seconds: 4),
+                            ),
+                          );
+                        });
+
+                      }
                       setState(() {
                         
                       });

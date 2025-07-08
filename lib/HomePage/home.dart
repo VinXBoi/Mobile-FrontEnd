@@ -394,10 +394,6 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: 
         FloatingActionButton(
           onPressed: () async {
-          // setState(() {
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
-            
-            // cards.add(
             final result = await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => TambahDashboard(username: widget.username,))
