@@ -4,11 +4,23 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => UserProvider(),
-      child: const MyApp(),
-      )
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => UserProvider()),
+      ChangeNotifierProvider(create: (context) => ThemeProvider()),
+    ],
+    child: const MyApp(),)
   );
+}
+
+class ThemeProvider extends ChangeNotifier {
+  bool isDarkMode = false;
+  ThemeMode currentTheme() {
+    return isDarkMode ? ThemeMode.dark : ThemeMode.light;
+  }
+  void changeMode() {
+    isDarkMode = !isDarkMode;
+    notifyListeners();
+  }
 }
 
 class UserProvider extends ChangeNotifier {
@@ -98,11 +110,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Activity Tracker',
+      themeMode : currentTheme.currentTheme(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF121212),
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.lightBlue,
+          secondary: Colors.blueAccent,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: const Color(0xFF1E1E1E),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blueGrey),
+          ),
+          prefixIconColor: Colors.grey[300],
+          hintStyle: TextStyle(color: Colors.grey[400]),
+        ),
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(color: Colors.white),
+        ),
+        checkboxTheme: CheckboxThemeData(
+          checkColor: MaterialStateProperty.all(Colors.black),
+          fillColor: MaterialStateProperty.all(Colors.white),
+        ),
       ),
       home: LoginPage(),
     );
