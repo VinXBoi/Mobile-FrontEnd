@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 class DashBoardPage extends StatefulWidget {
   final DashboardProvider dashboard;
-  final username;
+  final String username;
   const DashBoardPage({super.key, required this.username, required this.dashboard});
 
   @override
@@ -299,74 +299,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 ),
                 const Divider(thickness: 1, height: 24),
                 const SizedBox(height: 4),
-            //     Column(
-            //     children: [
-            //       Row(
-            //         children: [
-            //           ElevatedButton.icon(
-            //             onPressed: () {
-            //             },
-            //             icon: const Icon(Icons.add),
-            //             label: const Text('Quick Add Task'),
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blue,
-            //               shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(8),
-            //               ),
-            //             ),
-            //           ),
-            //           Expanded(child: Text(''),),
-            //           ElevatedButton.icon(
-            //             onPressed: () {
-            //             },
-            //             icon: const Icon(Icons.add),
-            //             label: const Text('Quick Add Event'),
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blue,
-            //               shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(8),
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-
-            //       ),
-            //       SizedBox(height: 20),
-            //       Row(
-            //         children: [
-            //           ElevatedButton.icon(
-            //             onPressed: () {
-            //             },
-            //             icon: const Icon(Icons.add),
-            //             label: const Text('Quick Add Task'),
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blue,
-            //               shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(8),
-            //               ),
-            //             ),
-            //           ),
-            //           const Expanded(child: Text(''),),
-            //           ElevatedButton.icon(
-            //             onPressed: () {
-            //             },
-            //             icon: const Icon(Icons.add),
-            //             label: const Text('Quick Add Event'),
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blue,
-            //               shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(8),
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-                    
-            //       ),
-
-            //     // const Text("Quick Add"),
-            //   ],
-            // )
-
                 ],
               ),
             ),
