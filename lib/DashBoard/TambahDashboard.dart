@@ -1,7 +1,9 @@
+import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 
 class TambahDashboard extends StatefulWidget {
-  const TambahDashboard({super.key});
+  final String username;
+  const TambahDashboard({super.key, required this.username});
 
   @override
   State<TambahDashboard> createState() => _TambahDashboardState();
@@ -13,84 +15,110 @@ class _TambahDashboardState extends State<TambahDashboard> {
   bool _showButton = false;
 
   @override
-
   void initState() {
     super.initState();
     _controller.addListener(() {
-      // Update tampilan saat isi TextField berubah
       setState(() {
         _showButton = _controller.text.trim().isNotEmpty;
       });
     });
   }
 
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Private") ,
-        leading: Icon(Icons.folder_open),
+        title: const Text("Create New Dashboard"),
+        leading: const Icon(Icons.folder_open),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
-            onPressed: (){
-              Navigator.pop(context);
-            }, 
-            icon: Icon(Icons.cancel)
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.close),
           ),
-
-          if (_showButton) TextButton(
-            onPressed: (){
-              Navigator.pop(context, _controller.text.trim());
-            }, 
-            child: Text("Done")
-          ),
-
-          // IconButton(onPressed: (){}, icon: Icon(Icons.more_horiz)),
-
+          // if (_showButton)
+          //   TextButton(
+          //     onPressed: () {
+          //       Navigator.pop(context, DashboardProvider(title: _controller.text, icon: Icons.edit));
+          //     },
+          //     child: const Text(
+          //       "Done",
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //   ),
         ],
-
       ),
       body: Padding(
-        padding: EdgeInsets.all(10), 
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
-            Container(
-              decoration: BoxDecoration(
-                border: 
-                  Border.all(
-                    color: Colors.grey,
-                    width: 2
+            GestureDetector(
+              onTap: () {
+                // Tambahkan logika untuk pilih gambar/icon
+              },
+              child: Container(
+                width: double.infinity,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.blue, width: 1.5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 6,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.add_photo_alternate_outlined, size: 32, color: Colors.blue),
+                      SizedBox(height: 6),
+                      Text("Add Image or Icon", style: TextStyle(color: Colors.blue)),
+                    ],
                   ),
-                  borderRadius: BorderRadius.circular(8)
-                
-              ),
-              width: 500,
-              height: 100,
-              child: Center(
-                child: IconButton(onPressed: (){}, icon: Icon(Icons.add)),
+                ),
               ),
             ),
-
+            const SizedBox(height: 20),
             TextField(
               controller: _controller,
-              decoration: InputDecoration(
-                // labelText: 'New Page',
-                hintText: "New Page",
-                border: InputBorder.none,
-
-                // border:
+              decoration: const InputDecoration(
+                hintText: "New Page Title",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.title),
               ),
             ),
+            const SizedBox(height: 16),
             TextField(
               controller: _controller2,
-              decoration: InputDecoration(
-                // labelText: 'New Page',
-                hintText: "Add description",
-                border: InputBorder.none,
-                // border:
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: "Add a short description...",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.notes),
               ),
             ),
+            SizedBox(height: 20,),
+            TextButton(onPressed: (){
+              if(_controller.text.isNotEmpty) {
+                Navigator.pop(context, DashboardProvider(title: _controller.text, icon: Icons.edit));
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Dashboard Baru Berhasil Ditambahkan'),
+                      duration: Duration(seconds: 4),
+                    ),
+                  );
+                });
+              }
+            }, child: Text('Simpan'),)
           ],
         ),
       ),

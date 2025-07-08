@@ -1,56 +1,53 @@
-import 'package:activity_tracker/DashBoard/Newpage.dart';
+import 'package:activity_tracker/DashBoard/NewPage.dart';
+import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:activity_tracker/DashBoard/kanban.dart';
-
-class Task {
-  final String title;
-
-  Task({required this.title});
-}
+import 'package:provider/provider.dart';
 
 class DashBoardPage extends StatefulWidget {
-  const DashBoardPage({super.key});
+  final DashboardProvider dashboard;
+  final String username;
+  const DashBoardPage({super.key, required this.username, required this.dashboard});
 
   @override
   _DashBoardPageState createState() => _DashBoardPageState();
 }
 
 class _DashBoardPageState extends State<DashBoardPage> {
-
-  bool tampilBorderComment = true;
-  bool editJudul = false;
-  String judul = "Judul Awal";
-
-
-  final TextEditingController judulController = TextEditingController();
-  // final TextEditingController commen = TextEditingController();
-
   final TextEditingController commentController = TextEditingController();
   final List<String> _comments = [];
-  final List<Task> tasks = [
-    Task(title: 'Finalize research topic'),
-    Task(title: 'Draft and submit research proposal'),
-    Task(title: 'Begin and complete data collection'),
-    Task(title: 'Write the first complete draft of the paper'),
-    Task(title: 'Revise the draft based on feedback'),
-    Task(title: 'Prepare the final draft of the paper'),
-    Task(title: 'Submit the research paper'),
-  ];
+  // final List<TaskProvider> TaskProviders = [
+  //   TaskProvider(title: 'Finalize research topic'),
+  //   TaskProvider(title: 'Draft and submit research proposal'),
+  //   TaskProvider(title: 'Begin and complete data collection'),
+  //   TaskProvider(title: 'Write the first complete draft of the paper'),
+  //   TaskProvider(title: 'Revise the draft based on feedback'),
+  //   TaskProvider(title: 'Prepare the final draft of the paper'),
+  //   TaskProvider(title: 'Submit the research paper'),
+  // ];
 
   void addComment(String comment) {
     _comments.add(comment);
   }
 
-  void addNewTask() {
-    // setState(() {
-    //   tasks.add(Task(
-    //     title: 'New Task ${tasks.length + 1}',
-    //   ));
-    // });
-  }
+  // void addNewTask() {
+  //   setState(() {
+  //     tasks.add(Task(
+  //       title: 'New Task ${tasks.length + 1}',
+  //     ));
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final dashboardMap = userProvider.userDashboard[widget.username]?[widget.dashboard] ?? {};
+    final dashboardTasks = [
+      ...?dashboardMap['Not Started'],
+      ...?dashboardMap['In Progress'],
+      ...?dashboardMap['Completed'],
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -72,8 +69,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      'assets/wallpaper.jpg',
+                    child: Image.network(
+                      'https://th.bing.com/th/id/OIP.pezNdQ9kxCrHYXGm64KPaQHaEK?rs=1&pid=ImgDetMain',
                       height: 180,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -87,41 +84,10 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       Icon(Icons.school, size: 40),
                       SizedBox(width: 12),
                       Expanded(
-                        child: Row(
-                          children: [
-                            editJudul?
-                              Expanded(
-                                child: TextField(
-                                  controller: judulController,
-                                  
-                                  decoration: InputDecoration(
-                                    // labelText: judul,
-                                    hintText: judul,
-                                  ),
-                                  onSubmitted: (value){
-                                    setState(() {
-                                      judul = value;
-                                      editJudul = false;
-                                    });
-                                  },
-                                
-                                ),
-                              )
-                            :
-                            Text(judul,
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                            // Expanded(child: Text("")),
-                            Spacer(),
-                            IconButton(
-                              onPressed: (){
-                                setState(() {
-                                  editJudul = true;
-                                });
-                            }, icon: Icon(Icons.edit)),
-                          ],
-                        )
-
+                        child: Text(
+                          widget.dashboard.title,
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
@@ -135,30 +101,20 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       filled: true,
                       fillColor: Colors.grey[100],
                       prefixIcon: const Icon(Icons.comment),
-                      border: tampilBorderComment? OutlineInputBorder(
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                      ): InputBorder.none,
+                      ),
                     ),
                     onSubmitted: (value) {
                       if (value.isNotEmpty) {
-                        setState(() {
-                          tampilBorderComment = false;
-                        });
-                        
                         addComment(value);
-                        
-                        // commentController.clear();
-                      }
-                      else{
-                        setState(() {
-                          tampilBorderComment = true;
-                        });
+                        commentController.clear();
                       }
                     },
                   ),
                   const SizedBox(height: 24),
                   const Divider(thickness: 1, height: 24),
-                  Kanban(),
+                  Kanban(username: widget.username, dashboard: widget.dashboard),
                   const Divider(thickness: 1, height: 24),
                   Row(spacing: 10,children: [
                     Icon(Icons.star),
@@ -278,7 +234,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
-                              addNewTask();
+                              // addNewTask();
                             },
                             icon: const Icon(Icons.add),
                             label: const Text('New'),
@@ -298,39 +254,47 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: tasks.length,
+                    itemCount: dashboardTasks.length,
                     itemBuilder: (context, index) {
-                      final task = tasks[index];
-                      return 
-                      Card(
-                        child: 
-                          ListTile(
-                            title: Text(task.title),
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => Newpage()));
-                            },
-                          ),
-                          
-                        
+                      final task = dashboardTasks[index];
+                      return Card(
+                        child: ListTile(
+                          title: Text(task.title),
+                        ),
                       );
                     },
                   ),
                   const SizedBox(height: 16),
 
                   ElevatedButton.icon(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Newpage()) );
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('New Plan'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    onPressed: () async {
+                      final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => Newpage(status: 'Not Started')));
+                      if(result != null) {
+                        final userProvider = Provider.of<UserProvider>(context, listen: false);
+                        userProvider.addTask(widget.username, widget.dashboard, result['status'], TaskProvider(title: result['title']));
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Task berhasil ditambahkan'),
+                              duration: Duration(seconds: 4),
+                            ),
+                          );
+                        });
+
+                      }
+                      setState(() {
+                        
+                      });
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('New Page'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
-                ),
 
                 const SizedBox(height: 16),
                 const Divider(thickness: 1, height: 24),
@@ -340,74 +304,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 ),
                 const Divider(thickness: 1, height: 24),
                 const SizedBox(height: 4),
-            //     Column(
-            //     children: [
-            //       Row(
-            //         children: [
-            //           ElevatedButton.icon(
-            //             onPressed: () {
-            //             },
-            //             icon: const Icon(Icons.add),
-            //             label: const Text('Quick Add Task'),
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blue,
-            //               shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(8),
-            //               ),
-            //             ),
-            //           ),
-            //           Expanded(child: Text(''),),
-            //           ElevatedButton.icon(
-            //             onPressed: () {
-            //             },
-            //             icon: const Icon(Icons.add),
-            //             label: const Text('Quick Add Event'),
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blue,
-            //               shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(8),
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-
-            //       ),
-            //       SizedBox(height: 20),
-            //       Row(
-            //         children: [
-            //           ElevatedButton.icon(
-            //             onPressed: () {
-            //             },
-            //             icon: const Icon(Icons.add),
-            //             label: const Text('Quick Add Task'),
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blue,
-            //               shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(8),
-            //               ),
-            //             ),
-            //           ),
-            //           const Expanded(child: Text(''),),
-            //           ElevatedButton.icon(
-            //             onPressed: () {
-            //             },
-            //             icon: const Icon(Icons.add),
-            //             label: const Text('Quick Add Event'),
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blue,
-            //               shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(8),
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-                    
-            //       ),
-
-            //     // const Text("Quick Add"),
-            //   ],
-            // )
-
                 ],
               ),
             ),

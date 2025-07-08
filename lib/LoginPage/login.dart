@@ -12,6 +12,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
   bool isChecked = false;
   bool obscurePw = true;
   String? userError;
@@ -22,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeProvider>(context);
     final userProvider = context.watch<UserProvider>();
     List<User> listUser = userProvider.listUser;
 

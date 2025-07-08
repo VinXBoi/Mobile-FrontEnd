@@ -1,24 +1,21 @@
 import 'package:activity_tracker/DashBoard/DashBoard.dart';
 import 'package:activity_tracker/DashBoard/TambahDashboard.dart';
+import 'package:activity_tracker/HomePage/about.dart';
 import 'package:activity_tracker/HomePage/setting.dart';
+import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final username;
   const HomePage({super.key, required this.username});
-
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
-  bool editJudulDash = false;
-  String judul ="Judul";
-
-  final TextEditingController _controllerEditJudul = TextEditingController();
-
+  Map<DashboardProvider, Map<String, List<TaskProvider>>>? dashboards;
 
   final List<Map<String, dynamic>> cards = [
     {
@@ -36,14 +33,13 @@ class _HomePageState extends State<HomePage> {
       'icon': Icons.group,
       'imageUrl': 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61',
     },
-    
+    {
+      'title': 'Final Project Draft',
+      'icon': Icons.assignment,
+      'imageUrl': 'https://images.unsplash.com/photo-1559027615-0281db1ee92b',
+    },
   ];
 
-  final List<Map<String, dynamic>> items = [
-    {'icon': Icons.edit, 'title': 'Class Notes'},
-    {'icon': Icons.group, 'title': 'Mikroskil Programming Class'},
-    {'icon': Icons.school, 'title': 'Research Paper Planner'},
-  ];
   final ScrollController _scrollController = ScrollController();
 
   void _scrollLeft() {
@@ -73,14 +69,17 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     });
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    dashboards = userProvider.userDashboard[widget.username];
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dashboardEntries = dashboards?.entries.toList();
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         elevation: 1,
@@ -89,10 +88,7 @@ class _HomePageState extends State<HomePage> {
         Padding(padding: EdgeInsets.all(10), 
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 22,
-              backgroundImage: AssetImage("assets/tes.jpg"),
-            ),
+            Icon(Icons.person),
             SizedBox(width: 10),
             Text(
               widget.username,
@@ -175,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                           final card = cards[index];
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
                             },
                             child: Container(
                               width: 160,
@@ -269,10 +265,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          final item = items[index];
+                          final dashboardKey = dashboardEntries?[index].key;
+                          // final dashboardValue = dashboardEntries?[index].value;
+                          
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage(username: widget.username, dashboard: dashboardKey,)));
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -291,35 +289,11 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Icon(Icons.arrow_right, color: theme.primaryColor),
                                   SizedBox(width: 10),
-                                  Icon(item['icon'], color: Colors.black),
+                                  Icon(dashboardKey?.icon, color: Colors.black),
                                   SizedBox(width: 12),
                                   Expanded(
-                                    child: 
-                                      (editJudulDash) ?
-                                        TextField(
-                                          controller: _controllerEditJudul,
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none
-                                          ),
-                                          onSubmitted: (value) {
-                                            setState(() {
-                                              
-                                              item['title']=value;
-                                              
-                                            editJudulDash= false;
-                                            });
-
-
-                                          },
-                                        )
-                                      : 
-                                        Text(
-
-                                      
-                                        
-                                      //edit
-                                      // item['title'],
-                                      item['title'],
+                                    child: Text(
+                                      dashboardKey!.title,
                                       style: TextStyle(
                                         color: Colors.black87,
                                         fontSize: 15,
@@ -330,93 +304,84 @@ class _HomePageState extends State<HomePage> {
                                   PopupMenuButton(
                                     icon: Icon(Icons.more_vert),
                                     onSelected: (value) {
-                                      if(value == 'edit'){
-                                        setState(() {
-                                          editJudulDash=true;
-                                        });
-                                        //aksi
-                                      }
-                                      else if(value == 'delete'){
+                                      if (value == 'edit') {
+                                        String editedTitle = dashboardKey.title;
                                         showDialog(
-                                          context: context, 
-                                          builder: (BuildContext context){
-                                          return AlertDialog(
-                                          title: Text('Hapus Item'),
-                                          content: Text('Yakin ingin menghapus "${items[index]['title']}"?'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop(); // Tutup dialog
-                                              },
-                                              child: Text('Batal'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  items.removeAt(index);
-                                                  cards.removeAt(index);
-                                                });
-                                                Navigator.of(context).pop(); // Tutup dialog
-                                              },
-                                              child: Text('Hapus'),
-                                            ),
-                                          ],
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text('Edit Dashboard'),
+                                              content: TextField(
+                                                controller: TextEditingController(text: dashboardKey.title),
+                                                decoration: InputDecoration(labelText: 'New Title'),
+                                                onChanged: (value) => editedTitle = value,
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(context),
+                                                  child: Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    if (editedTitle.isNotEmpty) {
+                                                      final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                                      userProvider.editDashboard(widget.username, dashboardKey, DashboardProvider(title: editedTitle, icon: dashboardKey.icon));
+                                                      setState(() {
+                                                        dashboards = userProvider.userDashboard[widget.username];
+                                                      });
+                                                    }
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('Save'),
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         );
-                                          }
+                                      } else if (value == 'delete') {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Hapus Item'),
+                                              content: Text('Yakin ingin menghapus "${dashboardKey.title}"?'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Batal'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                                    userProvider.removeDashboard(widget.username, dashboardKey);
+                                                    setState(() {
+                                                      dashboards = userProvider.userDashboard[widget.username];
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Hapus'),
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         );
-                                        
-                                      }
-                                      else if(value == ""){
-
                                       }
                                     },
                                     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                                      PopupMenuItem <String>(value: 'edit', child: Text("edit"),),
-                                      PopupMenuItem <String>(value: 'delete', child: Text("delete"),),
-                                    ]
+                                      PopupMenuItem<String>(value: 'edit', child: Text("Edit")),
+                                      PopupMenuItem<String>(value: 'delete', child: Text("Hapus")),
+                                    ],
                                   ),
-                                  // IconButton(
-                                  //   icon: Icon(Icons.more_vert, color: Colors.grey[800]),
-                                  //   onPressed: () {
-                                      
-                                  //   },
-                                  // ),
-                                  // IconButton(onPressed:(){}, icon:Icon(Icons.add, color: Colors.lightBlue), ),
-                                  // IconButton(onPressed:(){
-                                  //   showDialog(context: context, 
-                                  //     builder: (BuildContext context) {
-                                  //       return AlertDialog(
-                                  //         title: Text('Hapus Item'),
-                                  //         content: Text('Yakin ingin menghapus "${items[index]['title']}"?'),
-                                  //         actions: [
-                                  //           TextButton(
-                                  //             onPressed: () {
-                                  //               Navigator.of(context).pop(); // Tutup dialog
-                                  //             },
-                                  //             child: Text('Batal'),
-                                  //           ),
-                                  //           TextButton(
-                                  //             onPressed: () {
-                                  //               setState(() {
-                                  //                 items.removeAt(index);
-                                  //                 cards.removeAt(index);
-                                  //               });
-                                  //               Navigator.of(context).pop(); // Tutup dialog
-                                  //             },
-                                  //             child: Text('Hapus'),
-                                  //           ),
-                                  //         ],
-                                  //       );
-                                  //     }
-                                  //   );
-                                  // }, icon:Icon(Icons.delete, color: Colors.grey[800]), ),
+                            
                                 ],
                               ),
                             )
                           );
                           
                         },
-                        childCount: items.length,
+                        childCount: dashboardEntries?.length,
                       ),
                     ),
                   ),
@@ -426,33 +391,35 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-
       floatingActionButton: 
         FloatingActionButton(
           onPressed: () async {
-          // setState(() {
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
-            
-            // cards.add(
             final result = await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => TambahDashboard())
+              MaterialPageRoute(builder: (context) => TambahDashboard(username: widget.username,))
             );
-
-            if (result != null && result is String && result.trim().isNotEmpty) {
+            if (result != null) {
+              final userProvider = Provider.of<UserProvider>(context, listen: false);
+              userProvider.addDashboard(widget.username, result);
               setState(() {
-                cards.add({
-                  'title': result.trim(),
-                  'icon': Icons.new_label,
-                  'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
-
-                });
-
-                items.add({
-                  'title': result.trim(),
-                  'icon': Icons.new_label,});
+                dashboards = userProvider.userDashboard[widget.username];
               });
             }
+
+            // if (result != null && result is String && result.trim().isNotEmpty) {
+            //   setState(() {
+            //     cards.add({
+            //       'title': result.trim(),
+            //       'icon': Icons.new_label,
+            //       'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+
+            //     });
+
+            //     items.add({
+            //       'title': result.trim(),
+            //       'icon': Icons.new_label,});
+            //   });
+            // }
             //   {
             //     'title': 'Class Notes',
             //     'icon': Icons.edit,
@@ -467,27 +434,101 @@ class _HomePageState extends State<HomePage> {
           child: Icon(Icons.add),
           
         ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
 
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        shape: CircularNotchedRectangle(),
-        elevation: 5,
-        notchMargin: 6,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(icon: Icon(Icons.settings, color: Colors.blue), onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Setting()));
-              }),
-              IconButton(icon: Icon(Icons.home, color: Colors.blue), onPressed: () {}),
-              IconButton(icon: Icon(Icons.email, color: Colors.blue), onPressed: () {}),
-            ],
-          ),
+      // floatingActionButton: FloatingActionButton(onPressed: () async {
+      //   final result = await showDialog<DashboardProvider>(
+      //     context: context,
+      //     builder: (context) {
+      //       String title = '';
+      //       return AlertDialog(
+      //         title: Text('Add New Dashboard'),
+      //         content: TextField(
+      //           decoration: InputDecoration(labelText: 'Dashboard Title'),
+      //           onChanged: (value) => title = value,
+      //         ),
+      //         actions: [
+      //           TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+      //           TextButton(
+      //             onPressed: () {
+      //               if (title.isNotEmpty) {
+      //                 Navigator.pop(context, DashboardProvider(title: title, icon: Icons.edit));
+      //               } 
+      //             },
+      //             child: Text('Add'),
+      //           ),
+      //         ],
+      //       );
+      //     },
+      //   );
+      //   if (result != null) {
+      //     final userProvider = Provider.of<UserProvider>(context, listen: false);
+      //     userProvider.addDashboard(widget.username, result);
+      //     setState(() {
+      //       dashboards = userProvider.userDashboard[widget.username];
+      //     });
+      //   }
+      // }, 
+      //   child: Icon(Icons.add),
+      // ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text(widget.username), 
+              accountEmail: Text('${widget.username}@gmail.com'),
+              currentAccountPicture: Icon(Icons.person),
+            ),
+            // DrawerHeader(
+            //   decoration: BoxDecoration(color: Colors.blue),
+            //   child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
+            // ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Setting()));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('About'),
+              onTap: () {
+                // Aksi untuk email
+                Navigator.push(context, MaterialPageRoute(builder: (context) => About()));
+              },
+            ),
+          ],
         ),
       ),
+      // bottomNavigationBar: BottomAppBar(
+      //   color: Colors.white,
+      //   shape: CircularNotchedRectangle(),
+      //   elevation: 5,
+      //   notchMargin: 6,
+      //   child: Padding(
+      //     padding: const EdgeInsets.symmetric(horizontal: 20),
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       children: [
+      //         IconButton(icon: Icon(Icons.settings, color: Colors.blue), onPressed: () {
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => Setting()));
+      //         }),
+      //         IconButton(icon: Icon(Icons.home, color: Colors.blue), onPressed: () {}),
+      //         IconButton(icon: Icon(Icons.email, color: Colors.blue), onPressed: () {}),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
