@@ -241,7 +241,8 @@ class _NewpageState extends State<Newpage> {
 
                       Navigator.pop(context, {
                         'status' : selectedStatus,
-                        'title' : _titleController.text,
+                        'title' : _titleController.text, 
+                        'date' : selectedDate,
                       });                      
                       
                     },

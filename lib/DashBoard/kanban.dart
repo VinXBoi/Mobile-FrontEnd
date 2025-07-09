@@ -121,7 +121,7 @@ class Kanban extends StatelessWidget {
                 final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => Newpage(status: type)));
                 if(result != null) {
                   final userProvider = Provider.of<UserProvider>(context, listen: false);
-                  userProvider.addTask(username, dashboard, result['status'], TaskProvider(title: result['title']));
+                  userProvider.addTask(username, dashboard, result['status'], TaskProvider(title: result['title'],));
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
