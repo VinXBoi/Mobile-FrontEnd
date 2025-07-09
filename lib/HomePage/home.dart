@@ -1,5 +1,6 @@
 import 'package:activity_tracker/DashBoard/DashBoard.dart';
 import 'package:activity_tracker/DashBoard/TambahDashboard.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:activity_tracker/HomePage/about.dart';
 import 'package:activity_tracker/HomePage/setting.dart';
 import 'package:activity_tracker/main.dart';
@@ -17,21 +18,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Map<DashboardProvider, Map<String, List<TaskProvider>>>? dashboards;
 
+  bool loading = true;
+
   final List<Map<String, dynamic>> cards = [
     {
       'title': 'Class Notes',
       'icon': Icons.edit,
-      'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
     },
     {
       'title': 'Research Paper Planner',
       'icon': Icons.school,
-      'imageUrl': 'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
     },
     {
       'title': 'Group Meeting Notes',
       'icon': Icons.group,
-      'imageUrl': 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61',
     },
     {
       'title': 'Final Project Draft',
@@ -71,6 +77,11 @@ class _HomePageState extends State<HomePage> {
     });
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     dashboards = userProvider.userDashboard[widget.username];
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        loading = false;
+      });
+    });
   }
 
   @override
@@ -84,53 +95,44 @@ class _HomePageState extends State<HomePage> {
         foregroundColor: Colors.white,
         elevation: 1,
         titleSpacing: 0,
-        title: 
-        Padding(padding: EdgeInsets.all(10), 
-        child: Row(
-          children: [
-            Icon(Icons.person),
-            SizedBox(width: 10),
-            Text(
-              widget.username,
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
-        )
-        ,),
-        
+        title: Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Icon(Icons.person),
+              SizedBox(width: 10),
+              Text(widget.username, style: TextStyle(fontSize: 18)),
+            ],
+          ),
+        ),
+
         actions: [
           Container(
-            width: 
-              MediaQuery.of(context).size.width*0.35,
+            width: MediaQuery.of(context).size.width * 0.35,
             height: 43,
-                child: 
-                  TextField(
-                    maxLines: 1,//supaya cuma bisa ngisi satu bar
-                    decoration: 
-                      InputDecoration(
-                        contentPadding: 
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        enabledBorder: 
-                          OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(90),
-                            borderSide: BorderSide(color: Colors.blue)
-                          ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: 'Pencarian',
-                      ),
-                  ),
-          ),
-          SizedBox(width:2),
-          Padding(
-            padding: EdgeInsets.only(right: 3), 
-            child: 
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {},
+            child: TextField(
+              maxLines: 1, //supaya cuma bisa ngisi satu bar
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 10,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(90),
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                hintText: 'Pencarian',
               ),
+            ),
           ),
-          SizedBox(width: 10,),
+          SizedBox(width: 2),
+          Padding(
+            padding: EdgeInsets.only(right: 3),
+            child: IconButton(icon: Icon(Icons.search), onPressed: () {}),
+          ),
+          SizedBox(width: 10),
           // IconButton(
           //   icon: Icon(Icons.menu, color: Colors.black87),
           //   onPressed: () {},
@@ -141,16 +143,12 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(padding: EdgeInsets.only(left: 10, top: 5, bottom: 5), 
-              child:  Row(
-                children: [
-                    Text(
-                      "Dashboard", 
-                      style: TextStyle( fontSize: 20 ),
-                    ),
-                  ],
-              )
-            ,),
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 5, bottom: 5),
+              child: Row(
+                children: [Text("Dashboard", style: TextStyle(fontSize: 20))],
+              ),
+            ),
             // Scrollable Card with Arrows
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -163,76 +161,115 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: SizedBox(
                       height: 120,
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: cards.length,
-                        itemBuilder: (context, index) {
-                          final card = cards[index];
-                          return GestureDetector(
-                            onTap: () {
-                              // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
-                            },
-                            child: Container(
-                              width: 160,
-                              margin: EdgeInsets.only(right: 12),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                image: DecorationImage(
-                                  image: NetworkImage(card['imageUrl']),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              child: Stack(
-                                children: [
-                                  // Gradient overlay
-                                  Positioned.fill(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Colors.transparent,
-                                            Colors.black.withOpacity(0.7),
+                      child: Expanded(
+                        child:
+                            loading
+                                ? Expanded(
+                                  child: Shimmer.fromColors(
+                                    baseColor: Colors.grey,
+                                    highlightColor: Colors.white,
+                                    child: ListView.builder(
+                                      controller: _scrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: 4,
+                                      itemBuilder:
+                                          (context, index) => Container(
+                                            width: 160,
+                                            margin: EdgeInsets.only(right: 12),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                    ),
+                                  ),
+                                )
+                                : ListView.builder(
+                                  controller: _scrollController,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: cards.length,
+                                  itemBuilder: (context, index) {
+                                    final card = cards[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage()));
+                                      },
+                                      child: Container(
+                                        width: 160,
+                                        margin: EdgeInsets.only(right: 12),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              card['imageUrl'],
+                                            ),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            // Gradient overlay
+                                            Positioned.fill(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.topCenter,
+                                                    end: Alignment.bottomCenter,
+                                                    colors: [
+                                                      Colors.transparent,
+                                                      Colors.black.withOpacity(
+                                                        0.7,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            // Title and icon
+                                            Positioned(
+                                              left: 12,
+                                              bottom: 12,
+                                              right: 12,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Icon(
+                                                    card['icon'],
+                                                    size: 20,
+                                                    color: Colors.white,
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Text(
+                                                    card['title'],
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13,
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  // Title and icon
-                                  Positioned(
-                                    left: 12,
-                                    bottom: 12,
-                                    right: 12,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Icon(card['icon'], size: 20, color: Colors.white),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          card['title'],
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          );
-                          
-                        },
+                                    );
+                                  },
+                                ),
                       ),
                     ),
                   ),
+
                   IconButton(
                     icon: Icon(Icons.arrow_forward_ios, size: 18),
                     onPressed: _scrollRight,
@@ -240,149 +277,230 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Padding(padding: EdgeInsets.only(left: 10, top: 5, bottom: 5), 
-              child:  Row(
-                children: [
-                    Text(
-                      "Private", 
-                      style: TextStyle( fontSize: 20 ),
-                    ),
-                  ],
-              )
-            ,),
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 5, bottom: 5),
+              child: Row(
+                children: [Text("Private", style: TextStyle(fontSize: 20))],
+              ),
+            ),
 
             // List bawah (sliver list)
             Expanded(
               child: CustomScrollView(
                 slivers: [
                   SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     sliver: SliverGrid(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 1,
                         mainAxisSpacing: 10,
                         mainAxisExtent: 60,
                       ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final dashboardKey = dashboardEntries?[index].key;
-                          // final dashboardValue = dashboardEntries?[index].value;
-                          
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoardPage(username: widget.username, dashboard: dashboardKey,)));
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.shade300,
-                                    blurRadius: 6,
-                                    offset: Offset(0, 2),
-                                  )
-                                ],
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final dashboardKey = dashboardEntries?[index].key;
+                        // final dashboardValue = dashboardEntries?[index].value;
+
+                        if (loading) {
+                          return SizedBox(
+                            width: 200.0,
+                            height: 100.0,
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey,
+                              highlightColor: Colors.white,
+                              child: SizedBox(
+                                child:
+                                    loading
+                                        ? Container(color: Colors.grey[300])
+                                        : Text(
+                                          'Private',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 40.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                               ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.arrow_right, color: theme.primaryColor),
-                                  SizedBox(width: 10),
-                                  Icon(dashboardKey?.icon, color: Colors.black),
-                                  SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      dashboardKey!.title,
-                                      style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 15,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  PopupMenuButton(
-                                    icon: Icon(Icons.more_vert),
-                                    onSelected: (value) {
-                                      if (value == 'edit') {
-                                        String editedTitle = dashboardKey.title;
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text('Edit Dashboard'),
-                                              content: TextField(
-                                                controller: TextEditingController(text: dashboardKey.title),
-                                                decoration: InputDecoration(labelText: 'New Title'),
-                                                onChanged: (value) => editedTitle = value,
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () => Navigator.pop(context),
-                                                  child: Text('Cancel'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    if (editedTitle.isNotEmpty) {
-                                                      final userProvider = Provider.of<UserProvider>(context, listen: false);
-                                                      userProvider.editDashboard(widget.username, dashboardKey, DashboardProvider(title: editedTitle, icon: dashboardKey.icon));
-                                                      setState(() {
-                                                        dashboards = userProvider.userDashboard[widget.username];
-                                                      });
-                                                    }
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text('Save'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      } else if (value == 'delete') {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text('Hapus Item'),
-                                              content: Text('Yakin ingin menghapus "${dashboardKey.title}"?'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('Batal'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    final userProvider = Provider.of<UserProvider>(context, listen: false);
-                                                    userProvider.removeDashboard(widget.username, dashboardKey);
-                                                    setState(() {
-                                                      dashboards = userProvider.userDashboard[widget.username];
-                                                    });
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('Hapus'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                                      PopupMenuItem<String>(value: 'edit', child: Text("Edit")),
-                                      PopupMenuItem<String>(value: 'delete', child: Text("Hapus")),
-                                    ],
-                                  ),
-                            
-                                ],
-                              ),
-                            )
+                            ),
                           );
-                          
-                        },
-                        childCount: dashboardEntries?.length,
-                      ),
+
+                          // Container(
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.grey[300],
+                          //     borderRadius: BorderRadius.circular(12),
+                          //   ),
+                          // );
+                        }
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => DashBoardPage(
+                                      username: widget.username,
+                                      dashboard: dashboardKey,
+                                    ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_right,
+                                  color: theme.primaryColor,
+                                ),
+                                SizedBox(width: 10),
+                                Icon(dashboardKey?.icon, color: Colors.black),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    dashboardKey!.title,
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 15,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                PopupMenuButton(
+                                  icon: Icon(Icons.more_vert),
+                                  onSelected: (value) {
+                                    if (value == 'edit') {
+                                      String editedTitle = dashboardKey.title;
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Edit Dashboard'),
+                                            content: TextField(
+                                              controller: TextEditingController(
+                                                text: dashboardKey.title,
+                                              ),
+                                              decoration: InputDecoration(
+                                                labelText: 'New Title',
+                                              ),
+                                              onChanged:
+                                                  (value) =>
+                                                      editedTitle = value,
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed:
+                                                    () =>
+                                                        Navigator.pop(context),
+                                                child: Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  if (editedTitle.isNotEmpty) {
+                                                    final userProvider =
+                                                        Provider.of<
+                                                          UserProvider
+                                                        >(
+                                                          context,
+                                                          listen: false,
+                                                        );
+                                                    userProvider.editDashboard(
+                                                      widget.username,
+                                                      dashboardKey,
+                                                      DashboardProvider(
+                                                        
+                                                        title: editedTitle,
+                                                        icon: dashboardKey.icon,
+                                                      ),
+                                                    );
+                                                    setState(() {
+                                                      dashboards =
+                                                          userProvider
+                                                              .userDashboard[widget
+                                                              .username];
+                                                    });
+                                                  }
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Save'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    } else if (value == 'delete') {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Hapus Item'),
+                                            content: Text(
+                                              'Yakin ingin menghapus "${dashboardKey.title}"?',
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Batal'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  final userProvider =
+                                                      Provider.of<UserProvider>(
+                                                        context,
+                                                        listen: false,
+                                                      );
+                                                  userProvider.removeDashboard(
+                                                    widget.username,
+                                                    dashboardKey,
+                                                  );
+                                                  setState(() {
+                                                    dashboards =
+                                                        userProvider
+                                                            .userDashboard[widget
+                                                            .username];
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Hapus'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                  itemBuilder:
+                                      (BuildContext context) =>
+                                          <PopupMenuEntry<String>>[
+                                            PopupMenuItem<String>(
+                                              value: 'edit',
+                                              child: Text("Edit"),
+                                            ),
+                                            PopupMenuItem<String>(
+                                              value: 'delete',
+                                              child: Text("Hapus"),
+                                            ),
+                                          ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }, childCount: dashboardEntries?.length),
                     ),
                   ),
                 ],
@@ -391,49 +509,52 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButton: 
-        FloatingActionButton(
-          onPressed: () async {
-            final result = await Navigator.push(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TambahDashboard(username: widget.username),
+            ),
+          );
+          if (result != null) {
+            final userProvider = Provider.of<UserProvider>(
               context,
-              MaterialPageRoute(builder: (context) => TambahDashboard(username: widget.username,))
+              listen: false,
             );
-            if (result != null) {
-              final userProvider = Provider.of<UserProvider>(context, listen: false);
-              userProvider.addDashboard(widget.username, result);
-              setState(() {
-                dashboards = userProvider.userDashboard[widget.username];
-              });
-            }
+            userProvider.addDashboard(widget.username, result);
+            setState(() {
+              dashboards = userProvider.userDashboard[widget.username];
+            });
+          }
 
-            // if (result != null && result is String && result.trim().isNotEmpty) {
-            //   setState(() {
-            //     cards.add({
-            //       'title': result.trim(),
-            //       'icon': Icons.new_label,
-            //       'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+          // if (result != null && result is String && result.trim().isNotEmpty) {
+          //   setState(() {
+          //     cards.add({
+          //       'title': result.trim(),
+          //       'icon': Icons.new_label,
+          //       'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
 
-            //     });
+          //     });
 
-            //     items.add({
-            //       'title': result.trim(),
-            //       'icon': Icons.new_label,});
-            //   });
-            // }
-            //   {
-            //     'title': 'Class Notes',
-            //     'icon': Icons.edit,
-            //     'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
-            //   },
-            // );
-            // items.add(
-            //   {'icon': Icons.edit, 'title': '${items.length + 1}'},
-            // );
+          //     items.add({
+          //       'title': result.trim(),
+          //       'icon': Icons.new_label,});
+          //   });
+          // }
+          //   {
+          //     'title': 'Class Notes',
+          //     'icon': Icons.edit,
+          //     'imageUrl': 'https://images.unsplash.com/photo-1588776814546-ec7ab9f64f5e',
+          //   },
+          // );
+          // items.add(
+          //   {'icon': Icons.edit, 'title': '${items.length + 1}'},
+          // );
           // });
-        }, 
-          child: Icon(Icons.add),
-          
-        ),
+        },
+        child: Icon(Icons.add),
+      ),
 
       // floatingActionButton: FloatingActionButton(onPressed: () async {
       //   final result = await showDialog<DashboardProvider>(
@@ -452,7 +573,7 @@ class _HomePageState extends State<HomePage> {
       //             onPressed: () {
       //               if (title.isNotEmpty) {
       //                 Navigator.pop(context, DashboardProvider(title: title, icon: Icons.edit));
-      //               } 
+      //               }
       //             },
       //             child: Text('Add'),
       //           ),
@@ -467,7 +588,7 @@ class _HomePageState extends State<HomePage> {
       //       dashboards = userProvider.userDashboard[widget.username];
       //     });
       //   }
-      // }, 
+      // },
       //   child: Icon(Icons.add),
       // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
@@ -476,7 +597,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
-              accountName: Text(widget.username), 
+              accountName: Text(widget.username),
               accountEmail: Text('${widget.username}@gmail.com'),
               currentAccountPicture: Icon(Icons.person),
             ),
@@ -496,7 +617,10 @@ class _HomePageState extends State<HomePage> {
               title: Text('Settings'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Setting()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Setting()),
+                );
               },
             ),
             ListTile(
@@ -504,7 +628,10 @@ class _HomePageState extends State<HomePage> {
               title: Text('About'),
               onTap: () {
                 // Aksi untuk email
-                Navigator.push(context, MaterialPageRoute(builder: (context) => About()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => About()),
+                );
               },
             ),
           ],

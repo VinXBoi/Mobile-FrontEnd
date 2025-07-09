@@ -29,9 +29,9 @@ class UserProvider extends ChangeNotifier {
   Map<String, Map<DashboardProvider,Map<String, List<TaskProvider>>>> userDashboard = {
     'admin' :  {
       DashboardProvider(title: 'IF-B CLASS', icon: Icons.edit) : {
-        'Not Started' : [TaskProvider(title: 'Task 1'),],
-        'In Progress' : [TaskProvider(title: 'Task 2'),],
-        'Completed' : [TaskProvider(title: 'Task 3'),],
+        'Not Started' : [TaskProvider(title: 'Task 1', dueDate: '01/02/2023'),],
+        'In Progress' : [TaskProvider(title: 'Task 2', dueDate: '01/02/2023'),],
+        'Completed' : [TaskProvider(title: 'Task 3', dueDate: '01/02/2023'),],
       }
     }
   };
@@ -98,7 +98,9 @@ class DashboardProvider {
 
 class TaskProvider {
   String title;
-  TaskProvider({required this.title});  
+  String dueDate;
+
+  TaskProvider({required this.title, required this.dueDate});  
 }
 
 class ClassProvider {

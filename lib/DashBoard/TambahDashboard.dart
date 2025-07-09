@@ -12,6 +12,7 @@ class TambahDashboard extends StatefulWidget {
 class _TambahDashboardState extends State<TambahDashboard> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
+  // final TextEditingController _controller3 = TextEditingController();
   bool _showButton = false;
 
   @override
@@ -108,7 +109,7 @@ class _TambahDashboardState extends State<TambahDashboard> {
             SizedBox(height: 20,),
             TextButton(onPressed: (){
               if(_controller.text.isNotEmpty) {
-                Navigator.pop(context, DashboardProvider(title: _controller.text, icon: Icons.edit));
+                Navigator.pop(context, DashboardProvider(title: _controller.text, icon: Icons.edit ));
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

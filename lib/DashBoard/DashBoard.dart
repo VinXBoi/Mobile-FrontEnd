@@ -271,7 +271,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => Newpage(status: 'Not Started')));
                       if(result != null) {
                         final userProvider = Provider.of<UserProvider>(context, listen: false);
-                        userProvider.addTask(widget.username, widget.dashboard, result['status'], TaskProvider(title: result['title']));
+                        userProvider.addTask(widget.username, widget.dashboard, result['status'], TaskProvider(title: result['title'], dueDate: result['dueDate']));
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
