@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 class Kanban extends StatelessWidget {
   final String username;
   final DashboardProvider dashboard;
+  int persentasecompleted=-1;
+  int persentasenotcompleted=-1;
 
   Kanban({
     super.key,
@@ -15,6 +17,32 @@ class Kanban extends StatelessWidget {
 
   final List<String> typeKanban = ['Not Started', 'In Progress', 'Completed'];
   final List<MaterialColor> colorKanban = [Colors.grey, Colors.blue, Colors.green];
+
+    double itung(Map<String, List<TaskProvider>> statusTasks) {
+    final totalTasks = statusTasks.values.fold(0, (tmp, list) => tmp + list.length);
+    if (totalTasks == 0) return 0.0; 
+    final completedTasks = statusTasks['Completed']?.length ?? 0;
+    return completedTasks / totalTasks;
+  }
+
+
+  String isiTooltip(Map<String, List<TaskProvider>> statusTasks) {
+  final totalTasks = statusTasks.values.fold(0, (sum, list) => sum + list.length);
+    if (totalTasks == 0) {
+      return 'Tidak ada task';
+    }
+
+    final completedTasks = statusTasks['Completed']?.length ?? 0;
+    final notCompletedTasks = totalTasks - completedTasks;
+
+    final completedPercentage = (completedTasks / totalTasks) * 100;
+    final notCompletedPercentage = (notCompletedTasks / totalTasks) * 100;
+
+    return 'Completed: ${completedPercentage.toStringAsFixed(1)}%\n'
+        'Not Completed: ${notCompletedPercentage.toStringAsFixed(1)}%';
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +56,37 @@ class Kanban extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.wb_sunny),
-              SizedBox(width: 8),
-              Text(
-                "Progress Tracker",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
+              children: [
+                const Icon(Icons.wb_sunny),
+                const SizedBox(width: 8),
+                const Text(
+                  "Progress Tracker",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  width: 15,
+                  child: Text("",)
+                ,),
+                // const Spacer(),
+                Tooltip(
+                  message: isiTooltip(statusTasks),
+                  child: 
+                    SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 6,
+                    backgroundColor: Colors.grey[300],
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    value: itung(statusTasks),
+                    // value: 50,
+                  ),
+                ),
+                )
+                
+              ],
+            ),
+
           const Divider(thickness: 1, height: 24),
           for (int i = 0; i < typeKanban.length; i++)
             progressCard(
