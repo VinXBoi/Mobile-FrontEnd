@@ -1,7 +1,7 @@
 import 'package:activity_tracker/LoginPage/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 void main() {
   runApp(
     MultiProvider(providers: [
@@ -101,10 +101,6 @@ class TaskProvider {
   TaskProvider({required this.title});  
 }
 
-class ClassProvider {
-  
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -116,6 +112,7 @@ class MyApp extends StatelessWidget {
       title: 'Activity Tracker',
       themeMode : currentTheme.currentTheme(),
       theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
       darkTheme: ThemeData(
