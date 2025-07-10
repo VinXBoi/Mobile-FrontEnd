@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:activity_tracker/LoginPage/login.dart';
 import 'package:provider/provider.dart';
 
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -19,7 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String? emailError;
   String? pwcError;
   String? pwError;
-  List <Widget> iconEye = [Icon(Icons.visibility), Icon(Icons.visibility_off)];
+  List<Widget> iconEye = [Icon(Icons.visibility), Icon(Icons.visibility_off)];
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
@@ -28,8 +27,9 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(padding: EdgeInsets.all(30),
-        child : Column(
+      body: Padding(
+        padding: EdgeInsets.all(30),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
@@ -39,8 +39,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Register New\nAccount", 
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                      "Register New\nAccount",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
                     ),
                     SizedBox(height: 10),
                     Row(
@@ -53,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(2),
                               bottomLeft: Radius.circular(2),
-                            )
+                            ),
                           ),
                         ),
                         SizedBox(width: 4), // Jarak ke titik kecil
@@ -65,14 +68,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(2),
                               bottomRight: Radius.circular(2),
-                            )
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                Expanded(child: Text(''))
+                Expanded(child: Text('')),
               ],
             ),
             SizedBox(height: 40),
@@ -88,17 +91,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  prefixIcon : Icon(Icons.home, size: 20,)
+                  prefixIcon: Icon(Icons.home, size: 20),
                 ),
               ),
             ),
@@ -116,17 +119,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  prefixIcon : Icon(Icons.mail, size: 20,)
+                  prefixIcon: Icon(Icons.mail, size: 20),
                 ),
               ),
             ),
@@ -144,22 +147,26 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  prefixIcon: Icon(Icons.lock, size: 20,), 
-                  suffixIcon: IconButton(onPressed: () {
-                    setState(() {
-                      obscurePw = !obscurePw;
-                    });
-                  }, icon: iconEye[obscurePw ? 1 : 0], iconSize: 20,), // Icon Kanan
+                  prefixIcon: Icon(Icons.lock, size: 20),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        obscurePw = !obscurePw;
+                      });
+                    },
+                    icon: iconEye[obscurePw ? 1 : 0],
+                    iconSize: 20,
+                  ), // Icon Kanan
                 ),
               ),
             ),
@@ -177,26 +184,30 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8)
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  prefixIcon: Icon(Icons.lock, size: 20,), 
-                  suffixIcon: IconButton(onPressed: () {
-                    setState(() {
-                      obscurePwc = !obscurePwc;
-                    });
-                  }, icon: iconEye[obscurePwc ? 1 : 0], iconSize: 20,), // Icon Kanan
+                  prefixIcon: Icon(Icons.lock, size: 20),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        obscurePwc = !obscurePwc;
+                      });
+                    },
+                    icon: iconEye[obscurePwc ? 1 : 0],
+                    iconSize: 20,
+                  ), // Icon Kanan
                 ),
               ),
             ),
-            SizedBox(height: 30,),
+            SizedBox(height: 30),
             Row(
               children: [
                 Checkbox(
@@ -207,68 +218,118 @@ class _RegisterPageState extends State<RegisterPage> {
                     });
                   },
                 ),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text("By creating an account, you agree to our"),
-                  TextButton(onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(1),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Terms & Conditions',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("By creating an account, you agree to our"),
+                    TextButton(
+                      onPressed: () {
+                        showGeneralDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          barrierLabel: "Terms & Conditions",
+                          transitionDuration: Duration(milliseconds: 300),
+                          pageBuilder: (context, animation1, animation2) {
+                            return Center(
+                              child: Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.all(20),
+                                  constraints: BoxConstraints(
+                                    maxHeight:
+                                        MediaQuery.of(context).size.height *
+                                        0.4,
+                                    maxWidth:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Terms & Conditions',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 16),
+                                      Expanded(
+                                        child: SingleChildScrollView(
+                                          child: Text(
+                                            'By using this app, you agree to the following terms and conditions.\n'
+                                            'Make sure to read carefully. Your data may be collected for analytics purposes.\n'
+                                            'You must not misuse this app or engage in illegal activities.\n'
+                                            'For full details, visit our official website or contact support.',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              height: 2.5,
+                                            ),
+                                            textAlign: TextAlign.justify,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            'Close',
+                                            style: TextStyle(
+                                              color:
+                                                  Theme.of(
+                                                    context,
+                                                  ).primaryColor,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(height: 16),
-                                SingleChildScrollView(
-                                  child: Text(
-                                    'By using this app, you agree to the following terms and conditions.\n'
-                                    'Make sure to read carefully. Your data may be collected for analytics purposes.\n'
-                                    'You must not misuse this app or engage in illegal activities.\n'
-                                    'For full details, visit our official website or contact support.',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'Close',
-                                      style: TextStyle(color: Theme.of(context).primaryColor),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                              ),
+                            );
+                          },
+                          transitionBuilder: (
+                            context,
+                            animation1,
+                            animation2,
+                            child,
+                          ) {
+                            return ScaleTransition(
+                              scale: CurvedAnimation(
+                                parent: animation1,
+                                curve: Curves.easeOutBack,
+                              ),
+                              child: FadeTransition(
+                                opacity: animation1,
+                                child: child,
+                              ),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                  child: Text("Terms & Conditions", style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold
-                  ),),
-                  ),
-                ],),
+                      child: Text(
+                        "Terms & Conditions",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Expanded(child: Text('')),
               ],
             ),
-            SizedBox(height: 40,),
+            SizedBox(height: 40),
             Row(
               children: [
                 Expanded(
@@ -282,19 +343,24 @@ class _RegisterPageState extends State<RegisterPage> {
                           pwError = null;
                           pwcError = null;
                         });
-                        
-                        if(_usernameController.text.isEmpty || _emailController.text.isEmpty || _pwController.text.isEmpty || _pwcController.text.isEmpty) {
-                          if(_usernameController.text.isEmpty) userError = "Username Could Not Empty";
-                          if(_emailController.text.isEmpty) emailError = "Email Could Not Empty";
-                          if(_pwController.text.isEmpty) pwError = "Password Could Not Empty";
-                          if(_pwcController.text.isEmpty) pwcError = "Password Confirmation Could Not Empty";
-                          setState(() {
-                
-                          });
-                          return;
-                        } 
 
-                        if(_pwController.text != _pwcController.text) {
+                        if (_usernameController.text.isEmpty ||
+                            _emailController.text.isEmpty ||
+                            _pwController.text.isEmpty ||
+                            _pwcController.text.isEmpty) {
+                          if (_usernameController.text.isEmpty)
+                            userError = "Username Could Not Empty";
+                          if (_emailController.text.isEmpty)
+                            emailError = "Email Could Not Empty";
+                          if (_pwController.text.isEmpty)
+                            pwError = "Password Could Not Empty";
+                          if (_pwcController.text.isEmpty)
+                            pwcError = "Password Confirmation Could Not Empty";
+                          setState(() {});
+                          return;
+                        }
+
+                        if (_pwController.text != _pwcController.text) {
                           setState(() {
                             pwError = "Password Didn't Match";
                             pwcError = "Password Didn't Match";
@@ -302,14 +368,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           return;
                         }
 
-                        if(!isChecked) return;
+                        if (!isChecked) return;
 
-                        
-                        Provider.of<UserProvider>(context, listen: false).addUser(_usernameController.text, _pwController.text);
-                        Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => LoginPage())
+                        Provider.of<UserProvider>(
+                          context,
+                          listen: false,
+                        ).addUser(_usernameController.text, _pwController.text);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
                         );
-                      }, 
+                      },
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(Colors.blue),
                         foregroundColor: WidgetStateProperty.all(Colors.white),
@@ -320,7 +389,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                       ),
-                      child: Text("Register", style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: Text(
+                        "Register",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),
@@ -331,16 +403,20 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Already Have an Account ?"),
-                TextButton(onPressed: () {
-                  Navigator.push(context, 
-                    MaterialPageRoute(builder: (context) => LoginPage())
-                  );
-                }, child: Text("Login"))
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  child: Text("Login"),
+                ),
               ],
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }

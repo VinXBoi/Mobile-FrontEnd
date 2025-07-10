@@ -7,6 +7,7 @@ void main() {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ChangeNotifierProvider(create: (context) => GoalsProvider()),
     ],
     child: const MyApp(),)
   );
@@ -83,6 +84,49 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+}
+
+class GoalsProvider extends ChangeNotifier {
+  Map<String, Map<DashboardProvider, List<String>>> userGoals = {
+    'admin': {
+      DashboardProvider(title: 'IF-B CLASS', icon: Icons.edit): [
+        'Goals 1',
+        'Goals 2',
+        'Goals 3',
+      ]
+    }
+  };
+
+  List<String> getGoals(String username, DashboardProvider dashboard) {
+    return userGoals[username]?[dashboard] ?? [];
+  }
+
+  void addGoal(String username, DashboardProvider dashboard, String goal) {
+    userGoals[username] ??= {};
+    userGoals[username]![dashboard] ??= [];
+    userGoals[username]![dashboard]!.add(goal);
+    notifyListeners();
+  }
+
+  void editGoal(String username, DashboardProvider dashboard, int index, String newGoal) {
+    userGoals[username]?[dashboard]?[index] = newGoal;
+    notifyListeners();
+  }
+
+  void removeGoal(String username, DashboardProvider dashboard, int index) {
+    userGoals[username]?[dashboard]?.removeAt(index);
+    notifyListeners();
+  }
+
+  void reorderGoals(String username, DashboardProvider dashboard, int oldIndex, int newIndex) {
+    final goals = userGoals[username]?[dashboard];
+    if (goals != null) {
+      if (newIndex > oldIndex) newIndex -= 1;
+      final item = goals.removeAt(oldIndex);
+      goals.insert(newIndex, item);
+      notifyListeners();
+    }
+  }
 }
 
 class User {

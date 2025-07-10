@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Map<DashboardProvider, Map<String, List<TaskProvider>>>? dashboards;
-
+  int _selectedRate = 0;
   final List<Map<String, dynamic>> cards = [
     {
       'title': 'Class Notes',
@@ -507,6 +507,74 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => About()));
               },
             ),
+            ListTile(
+              leading: Icon(Icons.star),
+              title: Text('Rate Us'),
+              onTap: () {
+                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    int tempRate = _selectedRate;
+                    return StatefulBuilder(
+                      builder: (context, setStateDialog) {
+                        return AlertDialog(
+                          title: Text('Rate Us'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Silahkan kasih penilaian:'),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(5, (index) {
+                                  return IconButton(
+                                    icon: Icon(
+                                      index < tempRate ? Icons.star : Icons.star_border,
+                                      color: Colors.amber,
+                                    ),
+                                    onPressed: () {
+                                      setStateDialog(() {
+                                        tempRate = index + 1;
+                                      });
+                                    },
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                setStateDialog(() {
+                                  tempRate = 0; 
+                                });
+                                Navigator.pop(context); 
+                              },
+                              child: Text('Batal'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedRate = tempRate;
+                                });
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Terima kasih atas penilaian $_selectedRate untuk aplikasi kami!'), duration: Duration(seconds: 2)),
+                                );
+                                setState(() {
+                                  _selectedRate = 0; 
+                                });
+                              },
+                              child: Text('Kirim'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+           );})
+
           ],
         ),
       ),
