@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
-// import 'snack'
 // import 'package:activity_tracker/DashBoard/DashBoard.dart';
 
 class Newpage extends StatefulWidget {
@@ -20,7 +16,6 @@ class _NewpageState extends State<Newpage> {
 
   int selectedTypeIndex = 2;
   DateTime? selectedDate;
-  String? dueDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   int selectedColorIndex = 0;
@@ -56,7 +51,6 @@ class _NewpageState extends State<Newpage> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
-        dueDate = DateFormat('dd/MM/yyyy').format(selectedDate!);
       });
     }
   }
@@ -75,10 +69,6 @@ class _NewpageState extends State<Newpage> {
         }
       });
     }
-  }
-
-  String ubahString(DateTime pilihan){
-    return "${pilihan.day}/${pilihan.month}/${pilihan.year}";
   }
 
   @override
@@ -243,68 +233,16 @@ class _NewpageState extends State<Newpage> {
                     child: Text("Cancel"),
                   ),
                 ),
-                
                 SizedBox(width: 10),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_titleController.text.isEmpty) {
-                        showTopSnackBar(
-                          Overlay.of(context),
-                          Material(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.redAccent,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: const [
-                                  // Icon(Icons.warning, color: Colors.white),
-                                  SizedBox(width: 12, height: 10,),
-                                  Expanded(
-                                    child: Text(
-                                      "Nama Task tidak boleh kosong",
-                                      style: TextStyle(color: Colors.white, fontSize: 16),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-                      if(selectedDate == null){
-                        showTopSnackBar(
-                          Overlay.of(context),
-                          Material(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.redAccent,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: const [
-                                  // Icon(Icons.warning, color: Colors.white),
-                                  SizedBox(width: 12, height: 10,),
-                                  Expanded(
-                                    child: Text(
-                                      "Nama Task tidak boleh kosong",
-                                      style: TextStyle(color: Colors.white, fontSize: 16),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-                      
-
+                      if(_titleController.text.isEmpty) return;
 
                       Navigator.pop(context, {
                         'status' : selectedStatus,
                         'title' : _titleController.text, 
-                        'dueDate' : dueDate,
+                        'date' : selectedDate,
                       });                      
                       
                     },

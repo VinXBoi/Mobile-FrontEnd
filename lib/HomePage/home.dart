@@ -313,7 +313,14 @@ class _HomePageState extends State<HomePage> {
                               child: SizedBox(
                                 child:
                                     loading
-                                        ? Container(color: Colors.grey[300])
+                                        ? Container(
+                                            width: 200,
+                                            height: 100,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius: BorderRadius.circular(20), // Ini untuk rounded corner
+                                            ),
+                                          )
                                         : Text(
                                           'Private',
                                           textAlign: TextAlign.center,

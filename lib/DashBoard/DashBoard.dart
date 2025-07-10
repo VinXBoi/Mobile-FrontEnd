@@ -240,6 +240,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                             label: const Text('New'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -250,6 +251,20 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     ],
                   ),
                   const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:21.0),
+                    child: Row(children: [
+                      Text("Name", style: TextStyle(fontWeight: FontWeight.bold),),
+                      Expanded(child: Text("")),
+                      
+                      // SizedBox(width: MediaQuery.of(context).size.width*0.885,  height: 10),
+                      Text("Due date", style: TextStyle(fontWeight: FontWeight.bold),),
+                      SizedBox(
+                        width: 8,
+                        height: 1,
+                      ),
+                    ],),
+                  ),
 
                   ListView.builder(
                     shrinkWrap: true,
@@ -260,6 +275,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       return Card(
                         child: ListTile(
                           title: Text(task.title),
+                          trailing: Text(task.dueDate),
                         ),
                       );
                     },
@@ -290,6 +306,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     label: const Text('New Page'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
