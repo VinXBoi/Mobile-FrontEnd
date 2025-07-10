@@ -20,15 +20,6 @@ class DashBoardPage extends StatefulWidget {
 class _DashBoardPageState extends State<DashBoardPage> {
   final TextEditingController commentController = TextEditingController();
   final List<String> _comments = [];
-  // final List<TaskProvider> TaskProviders = [
-  //   TaskProvider(title: 'Finalize research topic'),
-  //   TaskProvider(title: 'Draft and submit research proposal'),
-  //   TaskProvider(title: 'Begin and complete data collection'),
-  //   TaskProvider(title: 'Write the first complete draft of the paper'),
-  //   TaskProvider(title: 'Revise the draft based on feedback'),
-  //   TaskProvider(title: 'Prepare the final draft of the paper'),
-  //   TaskProvider(title: 'Submit the research paper'),
-  // ];
 
   void addComment(String comment) {
     _comments.add(comment);
@@ -53,7 +44,11 @@ class _DashBoardPageState extends State<DashBoardPage> {
       ...?dashboardMap['Completed'],
     ];
     final goalsProvider = Provider.of<GoalsProvider>(context);
-    final goals = goalsProvider.getGoals(widget.username, widget.dashboard);
+    final goals = goalsProvider.getGoals(
+      widget.username,
+      widget.dashboard.title,
+    );
+    print(goals);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -139,37 +134,52 @@ class _DashBoardPageState extends State<DashBoardPage> {
                         icon: Icon(Icons.add),
                         onPressed: () async {
                           final controller = TextEditingController();
+                          bool isDisabled = true;
+
                           final result = await showDialog<String>(
                             context: context,
-                            builder:
-                                (context) => AlertDialog(
-                                  title: Text('Add Goal'),
-                                  content: TextField(
-                                    controller: controller,
-                                    decoration: InputDecoration(
-                                      hintText: 'Goal name',
+                            builder: (context) {
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: Text('Add Goal'),
+                                    content: TextField(
+                                      controller: controller,
+                                      decoration: InputDecoration(
+                                        hintText: 'Goal name',
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isDisabled = value.trim().isEmpty;
+                                        });
+                                      },
                                     ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text('Cancel'),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed:
-                                          () => Navigator.pop(
-                                            context,
-                                            controller.text,
-                                          ),
-                                      child: Text('Add'),
-                                    ),
-                                  ],
-                                ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text('Cancel'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed:
+                                            isDisabled
+                                                ? null
+                                                : () => Navigator.pop(
+                                                  context,
+                                                  controller.text,
+                                                ),
+                                        child: Text('Add'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           );
+
                           if (result != null && result.isNotEmpty) {
                             goalsProvider.addGoal(
                               widget.username,
-                              widget.dashboard,
+                              widget.dashboard.title,
                               result,
                             );
                           }
@@ -184,7 +194,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     onReorder: (oldIndex, newIndex) {
                       goalsProvider.reorderGoals(
                         widget.username,
-                        widget.dashboard,
+                        widget.dashboard.title,
                         oldIndex,
                         newIndex,
                       );
@@ -209,51 +219,60 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                 IconButton(
                                   icon: Icon(Icons.edit, size: 20),
                                   onPressed: () async {
-                                    bool isButtonEnabled = false;
                                     final controller = TextEditingController(
                                       text: goals[i],
                                     );
-                                    final result = await showDialog<String>(
+                                    String? result = await showDialog<String>(
                                       context: context,
-                                      builder:
-                                          (context) => AlertDialog(
-                                            title: Text('Edit Goal'),
-                                            content: TextField(
-                                              controller: controller,
-                                              decoration: InputDecoration(
-                                                hintText: 'Goal name',
+                                      builder: (context) {
+                                        bool isButtonEnabled =
+                                            controller.text.trim().isNotEmpty;
+
+                                        return StatefulBuilder(
+                                          builder: (context, setState) {
+                                            return AlertDialog(
+                                              title: Text('Edit Goal'),
+                                              content: TextField(
+                                                controller: controller,
+                                                decoration: InputDecoration(
+                                                  hintText: 'Goal name',
+                                                ),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    isButtonEnabled =
+                                                        value.trim().isNotEmpty;
+                                                  });
+                                                },
                                               ),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  isButtonEnabled =
-                                                      value.trim().isNotEmpty;
-                                                });
-                                              },
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed:
-                                                    () =>
-                                                        Navigator.pop(context),
-                                                child: Text('Cancel'),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed:
-                                                    isButtonEnabled
-                                                        ? () => Navigator.pop(
-                                                          context,
-                                                          controller.text,
-                                                        )
-                                                        : null,
-                                                child: Text('Save'),
-                                              ),
-                                            ],
-                                          ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                      ),
+                                                  child: Text('Cancel'),
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed:
+                                                      isButtonEnabled
+                                                          ? () => Navigator.pop(
+                                                            context,
+                                                            controller.text,
+                                                          )
+                                                          : null,
+                                                  child: Text('Save'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
                                     );
+
                                     if (result != null && result.isNotEmpty) {
                                       goalsProvider.editGoal(
                                         widget.username,
-                                        widget.dashboard,
+                                        widget.dashboard.title,
                                         i,
                                         result,
                                       );
@@ -265,7 +284,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                   onPressed:
                                       () => goalsProvider.removeGoal(
                                         widget.username,
-                                        widget.dashboard,
+                                        widget.dashboard.title,
                                         i,
                                       ),
                                 ),
@@ -277,7 +296,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     ],
                   ),
 
-                
                   const Divider(thickness: 1, height: 24),
                   const Text(
                     'Current draft',
@@ -294,7 +312,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     child: ListTile(
                       leading: const Icon(
                         Icons.insert_drive_file,
-                        color: Colors.green,
+                        color: Colors.lightBlue,
                       ),
                       title: const Text('Research Paper'),
                       onTap: () {},
@@ -303,13 +321,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   const SizedBox(height: 24),
                   const Divider(thickness: 1, height: 24),
                   const Text(
-                    'Plan',
+                    'List Tasks',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const Divider(thickness: 1, height: 24),
                   const SizedBox(height: 4),
                   const Text(
-                    'Break down your paper or thesis into milestones with target dates.',
+                    'Break down your tasks into milestones with target dates.',
                   ),
                   const SizedBox(height: 16),
 
@@ -320,23 +338,12 @@ class _DashBoardPageState extends State<DashBoardPage> {
                         children: [
                           const Icon(Icons.grid_view_outlined),
                           const SizedBox(width: 10),
-                          DropdownButton<String>(
-                            value: 'All tasks',
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'All tasks',
-                                child: Text('All'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Completed',
-                                child: Text('Completed'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Pending',
-                                child: Text('Pending'),
-                              ),
-                            ],
-                            onChanged: (value) {},
+                          Text(
+                            "All Tasks",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -351,8 +358,44 @@ class _DashBoardPageState extends State<DashBoardPage> {
                             icon: const Icon(Icons.more_horiz),
                           ),
                           ElevatedButton.icon(
-                            onPressed: () {
-                              // addNewTask();
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          Newpage(status: 'Not Started'),
+                                ),
+                              );
+
+                              if (result != null) {
+                                final userProvider = Provider.of<UserProvider>(
+                                  context,
+                                  listen: false,
+                                );
+                                userProvider.addTask(
+                                  widget.username,
+                                  widget.dashboard,
+                                  result['status'],
+                                  TaskProvider(
+                                    title: result['title'],
+                                    dueDate: result['dueDate'],
+                                  ),
+                                );
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Task berhasil ditambahkan',
+                                      ),
+                                      duration: Duration(seconds: 4),
+                                    ),
+                                  );
+                                });
+                              }
+                              setState(() {});
                             },
                             icon: const Icon(Icons.add),
                             label: const Text('New'),
@@ -375,7 +418,12 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     itemCount: dashboardTasks.length,
                     itemBuilder: (context, index) {
                       final task = dashboardTasks[index];
-                      return Card(child: ListTile(title: Text(task.title)));
+                      return Card(
+                        child: ListTile(
+                          title: Text(task.title),
+                          trailing: Text(task.dueDate),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 16),
@@ -398,7 +446,10 @@ class _DashBoardPageState extends State<DashBoardPage> {
                           widget.username,
                           widget.dashboard,
                           result['status'],
-                          TaskProvider(title: result['title']),
+                          TaskProvider(
+                            title: result['title'],
+                            dueDate: result['dueDate'],
+                          ),
                         );
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -423,12 +474,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
                   const SizedBox(height: 16),
                   const Divider(thickness: 1, height: 24),
-                  const Text(
-                    'Quick Add',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const Divider(thickness: 1, height: 24),
-                  const SizedBox(height: 4),
                 ],
               ),
             ),
@@ -436,11 +481,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(onPressed: (){
-      //   Navigator.pushReplacement(context,
-      //     MaterialPageRoute(builder: (context) => Newpage())
-      //   );
-      // }, child: Icon(Icons.add),),
     );
   }
 }

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:activity_tracker/DashBoard/DashBoard.dart';
+import 'package:intl/intl.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
+// import 'snack'
+// import 'package:activity_tracker/DashBoard/DashBoard.dart';
 
 class Newpage extends StatefulWidget {
   final String status;
-  const Newpage({super.key, required this.status});
+  final String? title;
+  final String? dueDate;
+  const Newpage({super.key, required this.status, this.title, this.dueDate});
 
   @override
   State<Newpage> createState() => _NewpageState();
@@ -16,6 +22,7 @@ class _NewpageState extends State<Newpage> {
 
   int selectedTypeIndex = 2;
   DateTime? selectedDate;
+  String? dueDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   int selectedColorIndex = 0;
@@ -30,15 +37,30 @@ class _NewpageState extends State<Newpage> {
     Colors.grey,
   ];
   final List<String> types = ["Event", "Meet", "Tasks"];
-  
+
   String? selectedStatus;
 
   @override
   void initState() {
-    selectedStatus = widget.status;
-    // TODO: implement initState
     super.initState();
+
+    selectedStatus = widget.status;
+
+    // If editing an existing task
+    if (widget.title != null) {
+      _titleController.text = widget.title!;
+    }
+
+    if (widget.dueDate != null) {
+      dueDate = widget.dueDate!;
+      try {
+        selectedDate = DateFormat('dd/MM/yyyy').parse(widget.dueDate!);
+      } catch (e) {
+        selectedDate = null;
+      }
+    }
   }
+
   final List<String> statusList = ['Completed', 'In Progress', 'Not Started'];
 
   Future<void> pickDate() async {
@@ -51,6 +73,7 @@ class _NewpageState extends State<Newpage> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
+        dueDate = DateFormat('dd/MM/yyyy').format(selectedDate!);
       });
     }
   }
@@ -69,6 +92,10 @@ class _NewpageState extends State<Newpage> {
         }
       });
     }
+  }
+
+  String ubahString(DateTime pilihan) {
+    return "${pilihan.day}/${pilihan.month}/${pilihan.year}";
   }
 
   @override
@@ -129,27 +156,7 @@ class _NewpageState extends State<Newpage> {
                 TextButton(onPressed: pickDate, child: Text("Select")),
               ],
             ),
-            SizedBox(height: 16),
 
-            // Time Picker
-            Row(
-              children: [
-                Icon(Icons.access_time, size: 20),
-                SizedBox(width: 8),
-                Text(startTime == null ? "Start" : startTime!.format(context)),
-                Icon(Icons.arrow_right_alt),
-                Text(endTime == null ? "End" : endTime!.format(context)),
-                Spacer(),
-                TextButton(
-                  onPressed: () => pickTime(isStart: true),
-                  child: Text("Start"),
-                ),
-                TextButton(
-                  onPressed: () => pickTime(isStart: false),
-                  child: Text("End"),
-                ),
-              ],
-            ),
             SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: selectedStatus,
@@ -233,18 +240,73 @@ class _NewpageState extends State<Newpage> {
                     child: Text("Cancel"),
                   ),
                 ),
+
                 SizedBox(width: 10),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      if(_titleController.text.isEmpty) return;
+                      if (_titleController.text.isEmpty) {
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          Material(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.redAccent,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: const [
+                                  // Icon(Icons.warning, color: Colors.white),
+                                  SizedBox(width: 12, height: 10),
+                                  Expanded(
+                                    child: Text(
+                                      "Nama Task tidak boleh kosong",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      if (selectedDate == null) {
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          Material(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.redAccent,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: const [
+                                  // Icon(Icons.warning, color: Colors.white),
+                                  SizedBox(width: 12, height: 10),
+                                  Expanded(
+                                    child: Text(
+                                      "Due Date Tidak Boleh kosong",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                        return;
+                      }
 
                       Navigator.pop(context, {
-                        'status' : selectedStatus,
-                        'title' : _titleController.text, 
-                        'date' : selectedDate,
-                      });                      
-                      
+                        'status': selectedStatus,
+                        'title': _titleController.text,
+                        'dueDate': dueDate,
+                      });
                     },
                     child: Text("Save"),
                   ),

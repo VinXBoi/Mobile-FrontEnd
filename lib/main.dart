@@ -25,8 +25,7 @@ class ThemeProvider extends ChangeNotifier {
   void changeMode(String option) {
     if (option == 'Light Mode') {
       isDarkMode = false;
-    }
-    else {
+    } else {
       isDarkMode = true;
     }
     notifyListeners();
@@ -40,9 +39,9 @@ class UserProvider extends ChangeNotifier {
   userDashboard = {
     'admin': {
       DashboardProvider(title: 'IF-B CLASS', icon: Icons.edit): {
-        'Not Started': [TaskProvider(title: 'Task 1')],
-        'In Progress': [TaskProvider(title: 'Task 2')],
-        'Completed': [TaskProvider(title: 'Task 3')],
+        'Not Started': [TaskProvider(title: 'Task 1', dueDate: '01/02/2023')],
+        'In Progress': [TaskProvider(title: 'Task 2', dueDate: '01/02/2023')],
+        'Completed': [TaskProvider(title: 'Task 3', dueDate: '01/02/2023')],
       },
     },
   };
@@ -109,49 +108,45 @@ class UserProvider extends ChangeNotifier {
 }
 
 class GoalsProvider extends ChangeNotifier {
-  Map<String, Map<DashboardProvider, List<String>>> userGoals = {
+  Map<String, Map<String, List<String>>> userGoals = {
     'admin': {
-      DashboardProvider(title: 'IF-B CLASS', icon: Icons.edit): [
-        'Goals 1',
-        'Goals 2',
-        'Goals 3',
-      ],
+      'IF-B CLASS': ['Goal 1', 'Goal 2', 'Goal 3'],
     },
   };
 
-  List<String> getGoals(String username, DashboardProvider dashboard) {
-    return userGoals[username]?[dashboard] ?? [];
+  List<String> getGoals(String username, String dashboardTitle) {
+    return userGoals[username]?[dashboardTitle] ?? [];
   }
 
-  void addGoal(String username, DashboardProvider dashboard, String goal) {
+  void addGoal(String username, String dashboardTitle, String goal) {
     userGoals[username] ??= {};
-    userGoals[username]![dashboard] ??= [];
-    userGoals[username]![dashboard]!.add(goal);
+    userGoals[username]![dashboardTitle] ??= [];
+    userGoals[username]![dashboardTitle]!.add(goal);
     notifyListeners();
   }
 
   void editGoal(
     String username,
-    DashboardProvider dashboard,
+    String dashboardTitle,
     int index,
     String newGoal,
   ) {
-    userGoals[username]?[dashboard]?[index] = newGoal;
+    userGoals[username]?[dashboardTitle]?[index] = newGoal;
     notifyListeners();
   }
 
-  void removeGoal(String username, DashboardProvider dashboard, int index) {
-    userGoals[username]?[dashboard]?.removeAt(index);
+  void removeGoal(String username, String dashboardTitle, int index) {
+    userGoals[username]?[dashboardTitle]?.removeAt(index);
     notifyListeners();
   }
 
   void reorderGoals(
     String username,
-    DashboardProvider dashboard,
+    String dashboardTitle,
     int oldIndex,
     int newIndex,
   ) {
-    final goals = userGoals[username]?[dashboard];
+    final goals = userGoals[username]?[dashboardTitle];
     if (goals != null) {
       if (newIndex > oldIndex) newIndex -= 1;
       final item = goals.removeAt(oldIndex);
@@ -174,7 +169,9 @@ class DashboardProvider {
 
 class TaskProvider {
   String title;
-  TaskProvider({required this.title});
+  String dueDate;
+
+  TaskProvider({required this.title, required this.dueDate});
 }
 
 class MyApp extends StatelessWidget {

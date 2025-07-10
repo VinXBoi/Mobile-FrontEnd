@@ -1,9 +1,12 @@
+import 'package:activity_tracker/HomePage/about.dart';
+import 'package:activity_tracker/HomePage/home.dart';
 import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Setting extends StatefulWidget {
-  const Setting({super.key});
+  final String username;
+  const Setting({super.key, required this.username});
 
   @override
   State<Setting> createState() => _SettingState();
@@ -29,7 +32,7 @@ class _SettingState extends State<Setting> {
   bool pageUpdates = true;
   bool workspaceDigest = true;
   bool slackNotifications = false;
-
+  int _selectedRate = 0;
   // State untuk nada notifikasi (radio)
   NotificationTone _tone = NotificationTone.defaultTone;
 
@@ -38,20 +41,7 @@ class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_rounded),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text("Setting"),
-        centerTitle: true,
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-      ),
-      body: ListView(
+    return ListView(
         padding: EdgeInsets.all(16.0),
         children: [
           Text(
@@ -62,7 +52,8 @@ class _SettingState extends State<Setting> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 20),
+          Divider(),
+          // SizedBox(height: 20),
           buildSwitchItem(
             "Mobile push notifications",
             "Receive push notifications on mentions and comments via your mobile app",
@@ -252,8 +243,7 @@ class _SettingState extends State<Setting> {
               ],
             ),
         ],
-      ),
-    );
+      );
   }
 
   Widget buildSwitchItem(
@@ -321,7 +311,11 @@ class _SettingState extends State<Setting> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: TextStyle(color: Colors.black)),
+                    Text(title, style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      )),
                     SizedBox(height: 4),
                     Text(
                       subtitle,
