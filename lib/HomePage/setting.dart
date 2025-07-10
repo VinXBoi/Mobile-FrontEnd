@@ -1,4 +1,6 @@
+import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Setting extends StatefulWidget {
   const Setting({super.key});
@@ -31,8 +33,11 @@ class _SettingState extends State<Setting> {
   // State untuk nada notifikasi (radio)
   NotificationTone _tone = NotificationTone.defaultTone;
 
+  String selectedSlackSetting = 'Light Mode';
+  final List<String> slackOptions = ['Light Mode', 'Dark Mode'];
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -52,7 +57,7 @@ class _SettingState extends State<Setting> {
           Text(
             "Notifications",
             style: TextStyle(
-              color: Colors.black,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -88,22 +93,28 @@ class _SettingState extends State<Setting> {
             workspaceDigest,
             (val) => setState(() => workspaceDigest = val),
           ),
-          buildSwitchItem(
-            "Slack notifications",
-            "Receive notifications in your Slack workspace when you're mentioned in a page, database property, or comment",
-            slackNotifications,
-            (val) => setState(() => slackNotifications = val),
+          buildDropdownItem(
+            "Theme Mode",
+            "Adjust Your System Theme Mode",
+            selectedSlackSetting,
+            slackOptions,
+            (val) => setState(() {
+              themeProvider.changeMode(val!);
+              selectedSlackSetting = val;
+            }),
           ),
 
-          SizedBox(height: 30),
+          SizedBox(height: 15),
           Text(
             "Nada Notifikasi",
             style: TextStyle(
-              color: Colors.black,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
+
+          SizedBox(height: 15),
           Column(
             children: [
               RadioListTile<NotificationTone>(
@@ -139,11 +150,11 @@ class _SettingState extends State<Setting> {
             ],
           ),
           Divider(),
-          SizedBox(height: 30),
+          SizedBox(height: 15),
           Text(
             "Tasks",
             style: TextStyle(
-              color: Colors.black,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -167,12 +178,19 @@ class _SettingState extends State<Setting> {
           ),
 
           Divider(),
-          SizedBox(height: 20),
+          SizedBox(height: 15),
           if (isTaskNotificationEnabled)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Topics", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  "Topics",
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 ...taskCategories.keys.map((topic) {
                   return CheckboxListTile(
                     title: Text(topic),
@@ -206,7 +224,11 @@ class _SettingState extends State<Setting> {
                       ),
                       child: Text(
                         "Save",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     OutlinedButton(
@@ -241,23 +263,89 @@ class _SettingState extends State<Setting> {
     Function(bool) onChanged,
   ) {
     return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+              Switch(
+                value: value,
+                onChanged: onChanged,
+                activeColor: Colors.blue,
+              ),
+            ],
+          ),
+        ),
+        Divider(color: Colors.grey[400], thickness: 1, height: 8),
+      ],
+    );
+  }
+
+  Widget buildDropdownItem(
+    String title,
+    String subtitle,
+    String currentValue,
+    List<String> options,
+    Function(String?) onChanged,
+  ) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SwitchListTile(
-          title: Text(title, style: TextStyle(color: Colors.black)),
-          subtitle: Text(
-            subtitle,
-            style: TextStyle(color: Colors.grey[600], fontSize: 13),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: TextStyle(color: Colors.black)),
+                    SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
+              DropdownButton<String>(
+                value: currentValue,
+                onChanged: onChanged,
+                items:
+                    options.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+              ),
+            ],
           ),
-          value: value,
-          onChanged: onChanged,
-          activeColor: Colors.blue,
         ),
-        Divider(
-          color: Colors.grey[400], // Lebih terang agar terlihat
-          thickness: 1,
-          height: 8,
-        ),
+        Divider(color: Colors.grey[400], thickness: 1, height: 8),
       ],
     );
   }

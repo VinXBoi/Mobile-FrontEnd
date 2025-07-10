@@ -2,14 +2,17 @@ import 'package:activity_tracker/LoginPage/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 void main() {
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => UserProvider()),
-      ChangeNotifierProvider(create: (context) => ThemeProvider()),
-      ChangeNotifierProvider(create: (context) => GoalsProvider()),
-    ],
-    child: const MyApp(),)
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => GoalsProvider()),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -18,8 +21,14 @@ class ThemeProvider extends ChangeNotifier {
   ThemeMode currentTheme() {
     return isDarkMode ? ThemeMode.dark : ThemeMode.light;
   }
-  void changeMode() {
-    isDarkMode = !isDarkMode;
+
+  void changeMode(String option) {
+    if (option == 'Light Mode') {
+      isDarkMode = false;
+    }
+    else {
+      isDarkMode = true;
+    }
     notifyListeners();
   }
 }
@@ -27,14 +36,15 @@ class ThemeProvider extends ChangeNotifier {
 class UserProvider extends ChangeNotifier {
   List<User> listUser = [User(username: 'admin', password: 'admin')];
 
-  Map<String, Map<DashboardProvider,Map<String, List<TaskProvider>>>> userDashboard = {
-    'admin' :  {
-      DashboardProvider(title: 'IF-B CLASS', icon: Icons.edit) : {
-        'Not Started' : [TaskProvider(title: 'Task 1'),],
-        'In Progress' : [TaskProvider(title: 'Task 2'),],
-        'Completed' : [TaskProvider(title: 'Task 3'),],
-      }
-    }
+  Map<String, Map<DashboardProvider, Map<String, List<TaskProvider>>>>
+  userDashboard = {
+    'admin': {
+      DashboardProvider(title: 'IF-B CLASS', icon: Icons.edit): {
+        'Not Started': [TaskProvider(title: 'Task 1')],
+        'In Progress': [TaskProvider(title: 'Task 2')],
+        'Completed': [TaskProvider(title: 'Task 3')],
+      },
+    },
   };
 
   void addUser(String username, String password) {
@@ -58,32 +68,44 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void editDashboard(String username, DashboardProvider oldDashboard, DashboardProvider newDashboard) {
+  void editDashboard(
+    String username,
+    DashboardProvider oldDashboard,
+    DashboardProvider newDashboard,
+  ) {
     final dashboards = userDashboard[username];
     if (dashboards != null && dashboards.containsKey(oldDashboard)) {
       final taskMap = dashboards[oldDashboard];
       dashboards.remove(oldDashboard);
-      dashboards[newDashboard] = taskMap ?? {
-        'Not Started': [],
-        'In Progress': [],
-        'Completed': [],
-      };
+      dashboards[newDashboard] =
+          taskMap ?? {'Not Started': [], 'In Progress': [], 'Completed': []};
       notifyListeners();
     }
   }
 
-  void addTask(String username, DashboardProvider dashboard, String status, TaskProvider task) {
+  void addTask(
+    String username,
+    DashboardProvider dashboard,
+    String status,
+    TaskProvider task,
+  ) {
     userDashboard[username]?[dashboard]?[status]?.add(task);
     notifyListeners();
   }
 
-  void editStatusTask(String username, DashboardProvider dashboard, TaskProvider task, String fromStatus, String toStatus) {
-    if (userDashboard[username]?[dashboard]?[fromStatus]?.remove(task) ?? false) {
+  void editStatusTask(
+    String username,
+    DashboardProvider dashboard,
+    TaskProvider task,
+    String fromStatus,
+    String toStatus,
+  ) {
+    if (userDashboard[username]?[dashboard]?[fromStatus]?.remove(task) ??
+        false) {
       userDashboard[username]?[dashboard]?[toStatus]?.add(task);
       notifyListeners();
     }
   }
-
 }
 
 class GoalsProvider extends ChangeNotifier {
@@ -93,8 +115,8 @@ class GoalsProvider extends ChangeNotifier {
         'Goals 1',
         'Goals 2',
         'Goals 3',
-      ]
-    }
+      ],
+    },
   };
 
   List<String> getGoals(String username, DashboardProvider dashboard) {
@@ -108,7 +130,12 @@ class GoalsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void editGoal(String username, DashboardProvider dashboard, int index, String newGoal) {
+  void editGoal(
+    String username,
+    DashboardProvider dashboard,
+    int index,
+    String newGoal,
+  ) {
     userGoals[username]?[dashboard]?[index] = newGoal;
     notifyListeners();
   }
@@ -118,7 +145,12 @@ class GoalsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reorderGoals(String username, DashboardProvider dashboard, int oldIndex, int newIndex) {
+  void reorderGoals(
+    String username,
+    DashboardProvider dashboard,
+    int oldIndex,
+    int newIndex,
+  ) {
     final goals = userGoals[username]?[dashboard];
     if (goals != null) {
       if (newIndex > oldIndex) newIndex -= 1;
@@ -135,14 +167,14 @@ class User {
 }
 
 class DashboardProvider {
-  String title; 
+  String title;
   dynamic icon;
   DashboardProvider({required this.title, required this.icon});
 }
 
 class TaskProvider {
   String title;
-  TaskProvider({required this.title});  
+  TaskProvider({required this.title});
 }
 
 class MyApp extends StatelessWidget {
@@ -154,7 +186,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Activity Tracker',
-      themeMode : currentTheme.currentTheme(),
+      themeMode: currentTheme.currentTheme(),
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
@@ -175,9 +207,7 @@ class MyApp extends StatelessWidget {
           prefixIconColor: Colors.grey[300],
           hintStyle: TextStyle(color: Colors.grey[400]),
         ),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Colors.white),
-        ),
+        textTheme: const TextTheme(bodyMedium: TextStyle(color: Colors.white)),
         checkboxTheme: CheckboxThemeData(
           checkColor: MaterialStateProperty.all(Colors.black),
           fillColor: MaterialStateProperty.all(Colors.white),
