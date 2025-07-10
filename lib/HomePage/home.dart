@@ -2,6 +2,7 @@ import 'package:activity_tracker/DashBoard/DashBoard.dart';
 import 'package:activity_tracker/DashBoard/TambahDashboard.dart';
 import 'package:activity_tracker/HomePage/about.dart';
 import 'package:activity_tracker/HomePage/setting.dart';
+import 'package:activity_tracker/LoginPage/login.dart';
 import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -165,6 +166,22 @@ class _HomePageState extends State<HomePage> {
           //   icon: Icon(Icons.menu, color: Colors.black87),
           //   onPressed: () {},
           // )
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'logout') {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  (route) => false,
+                );
+              }
+            },
+            itemBuilder:
+                (BuildContext context) => [
+                  PopupMenuItem<String>(value: 'logout', child: Text('Logout')),
+                ],
+            icon: Icon(Icons.more_vert),
+          ),
         ],
       ),
 
