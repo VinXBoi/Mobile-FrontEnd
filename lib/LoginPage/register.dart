@@ -146,10 +146,217 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text("By creating an account, you agree to our"),
+<<<<<<< Updated upstream
                   Text("Terms & Conditions", style: TextStyle(
                     color: Colors.blue,
                     fontWeight: FontWeight.bold
                   ),), 
+=======
+                  TextButton(
+                    onPressed: () {
+                      showGeneralDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        barrierLabel: "Terms & Conditions",
+                        transitionDuration: Duration(milliseconds: 300),
+                        pageBuilder: (context, animation1, animation2) {
+                          return Center(
+                            child: Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(20),
+                                constraints: BoxConstraints(
+                                  maxHeight: MediaQuery.of(context).size.height * 0.4,
+                                  maxWidth: MediaQuery.of(context).size.width * 0.4,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Terms & Conditions',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 16),
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        child: Text(
+                                          'By using this app, you agree to the following terms and conditions.\n'
+                                          'Make sure to read carefully. Your data may be collected for analytics purposes.\n'
+                                          'You must not misuse this app or engage in illegal activities.\n'
+                                          'For full details, visit our official website or contact support.',
+                                          style: TextStyle(fontSize: 14, height: 2.5),
+                                          textAlign: TextAlign.justify,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'Close',
+                                          style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        transitionBuilder: (context, animation1, animation2, child) {
+                          return ScaleTransition(
+                            scale: CurvedAnimation(
+                              parent: animation1,
+                              curve: Curves.easeOutBack,
+                            ),
+                            child: FadeTransition(
+                              opacity: animation1,
+                              child: child,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text(
+                      "Terms & Conditions",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+
+                  // TextButton(onPressed: () {
+                  //   showDialog(
+                  //     context: context,
+                  //     builder: (BuildContext context) {
+                  //       return Dialog(
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(16),
+                  //         ),
+                  //         child: Container(
+                  //           padding: const EdgeInsets.all(20),
+                  //           constraints: BoxConstraints(
+                  //             maxHeight: MediaQuery.of(context).size.height * 0.4,
+                  //             maxWidth: MediaQuery.of(context).size.width * 0.5,
+                  //           ),
+                  //           child: Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               Text(
+                  //                 'Terms & Conditions',
+                  //                 style: TextStyle(
+                  //                   fontSize: 20,
+                  //                   fontWeight: FontWeight.bold,
+                  //                 ),
+                  //               ),
+                  //               SizedBox(height: 16),
+                  //               Expanded(
+                  //                 child: SingleChildScrollView(
+                  //                   child: Text(
+                  //                     'By using this app, you agree to the following terms and conditions.\n'
+                  //                     'Make sure to read carefully. Your data may be collected for analytics purposes.\n'
+                  //                     'You must not misuse this app or engage in illegal activities.\n'
+                  //                     'For full details, visit our official website or contact support.',
+                  //                     style: TextStyle(
+                  //                       fontSize: 14,
+                  //                       height: 2.5,
+                  //                     ),
+                  //                     textAlign: TextAlign.justify,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //               SizedBox(height: 5),
+                  //               Align(
+                  //                 alignment: Alignment.centerRight,
+                  //                 child: TextButton(
+                  //                   onPressed: () {
+                  //                     Navigator.of(context).pop();
+                  //                   },
+                  //                   child: Text(
+                  //                     'Close',
+                  //                     style: TextStyle(
+                  //                       color: Theme.of(context).primaryColor,
+                  //                       fontWeight: FontWeight.bold,
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (BuildContext context) {
+                    //     return Dialog(
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(16),
+                    //       ),
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.all(1),
+                    //         child: Column(
+                    //           mainAxisSize: MainAxisSize.min,
+                    //           children: [
+                    //             Text(
+                    //               'Terms & Conditions',
+                    //               style: TextStyle(
+                    //                 fontSize: 20,
+                    //                 fontWeight: FontWeight.bold,
+                    //               ),
+                    //             ),
+                    //             SizedBox(height: 16),
+                    //             SingleChildScrollView(
+                    //               child: Text(
+                    //                 'By using this app, you agree to the following terms and conditions.\n'
+                    //                 'Make sure to read carefully. Your data may be collected for analytics purposes.\n'
+                    //                 'You must not misuse this app or engage in illegal activities.\n'
+                    //                 'For full details, visit our official website or contact support.',
+                    //                 style: TextStyle(fontSize: 14),
+                    //               ),
+                    //             ),
+                    //             SizedBox(height: 20),
+                    //             Align(
+                    //               alignment: Alignment.bottomRight,
+                    //               child: TextButton(
+                    //                 onPressed: () {
+                    //                   Navigator.of(context).pop();
+                    //                 },
+                    //                 child: Text(
+                    //                   'Close',
+                    //                   style: TextStyle(color: Theme.of(context).primaryColor),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     );
+                  
+                  //   );
+                  // },
+                  // child: Text("Terms & Conditions", style: TextStyle(
+                  //   color: Colors.blue,
+                  //   fontWeight: FontWeight.bold
+                  // ),),
+                  // ),
+>>>>>>> Stashed changes
                 ],),
                 Expanded(child: Text('')),
               ],
