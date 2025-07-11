@@ -169,10 +169,14 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                         onPressed:
                                             isDisabled
                                                 ? null
-                                                : () => Navigator.pop(
+                                                : () => {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(content: Text('Goals Berhasil Ditambahkan'), duration: Duration(seconds: 2)),
+                                                  ),
+                                                  Navigator.pop(
                                                   context,
                                                   controller.text,
-                                                ),
+                                                ),},
                                         child: Text('Add'),
                                       ),
                                     ],
@@ -334,6 +338,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                         i,
                                         result,
                                       );
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Goals Berhasil Diedit'), duration: Duration(seconds: 2)),
+                                      );
                                     }
                                   },
                                 ),
@@ -457,6 +464,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                             label: const Text('New'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -522,6 +530,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     label: const Text('New Page'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
