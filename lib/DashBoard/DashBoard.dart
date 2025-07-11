@@ -1,8 +1,11 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:activity_tracker/DashBoard/NewPage.dart';
 import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:activity_tracker/DashBoard/kanban.dart';
 import 'package:provider/provider.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class DashBoardPage extends StatefulWidget {
   final DashboardProvider dashboard;
@@ -48,7 +51,10 @@ class _DashBoardPageState extends State<DashBoardPage> {
       widget.username,
       widget.dashboard.title,
     );
-    print(goals);
+    final totalGoals = goals.length;
+    final completedGoals = goals.where((goal) => goal['done'] == true).length;
+    final incompleteGoals = totalGoals - completedGoals;
+    final progress = totalGoals == 0 ? 0.0 : completedGoals / totalGoals;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -187,7 +193,25 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       ),
                     ],
                   ),
-                  const Divider(thickness: 1, height: 24),
+                  const SizedBox(height: 4),
+                  Text(
+                    incompleteGoals == 0
+                        ? '🎉 All goals completed!'
+                        : '$incompleteGoals goals remaining',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 8,
+                    backgroundColor: Colors.grey[300],
+                    color: Colors.green[500],
+                  ),
+                  SizedBox(height: 16),
+                
                   ReorderableListView(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -204,15 +228,54 @@ class _DashBoardPageState extends State<DashBoardPage> {
                         Card(
                           key: ValueKey(goals[i]),
                           elevation: 0.5,
+                          color: goals[i]['done'] ? Colors.green[100] : null,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: ListTile(
-                            leading: Icon(
-                              Icons.track_changes,
-                              color: Colors.black54,
+                            leading: InkWell(
+                              onTap: () {
+                                goalsProvider.toggleGoalStatus(
+                                  widget.username,
+                                  widget.dashboard.title,
+                                  i,
+                                );
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.track_changes,
+                                    color: goals[i]['done'] ? Colors.green[800] : Colors.black54,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  StepProgressIndicator(
+                                    totalSteps: 1,
+                                    currentStep: goals[i]['done'] ? 1 : 0,
+                                    size: 20,
+                                    selectedColor: Colors.black,
+                                    unselectedColor: Colors.grey,
+                                    customStep: (index, color, _) => Container(
+                                      color: color,
+                                      child: Icon(
+                                        color == Colors.black ? Icons.check : Icons.remove,
+                                        color: color == Colors.black ? Colors.white : Colors.black45,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            title: Text(goals[i]),
+                            title: Text(
+                              goals[i]['title'],
+                              style: TextStyle(
+                                decoration: goals[i]['done']
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                                color: goals[i]['done'] ? Colors.green[800] : Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -220,7 +283,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                   icon: Icon(Icons.edit, size: 20),
                                   onPressed: () async {
                                     final controller = TextEditingController(
-                                      text: goals[i],
+                                      text: goals[i]['title'],
                                     );
                                     String? result = await showDialog<String>(
                                       context: context,
@@ -234,9 +297,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                               title: Text('Edit Goal'),
                                               content: TextField(
                                                 controller: controller,
-                                                decoration: InputDecoration(
-                                                  hintText: 'Goal name',
-                                                ),
+                                                decoration:
+                                                    InputDecoration(hintText: 'Goal name'),
                                                 onChanged: (value) {
                                                   setState(() {
                                                     isButtonEnabled =
@@ -246,20 +308,16 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                               ),
                                               actions: [
                                                 TextButton(
-                                                  onPressed:
-                                                      () => Navigator.pop(
-                                                        context,
-                                                      ),
+                                                  onPressed: () => Navigator.pop(context),
                                                   child: Text('Cancel'),
                                                 ),
                                                 ElevatedButton(
-                                                  onPressed:
-                                                      isButtonEnabled
-                                                          ? () => Navigator.pop(
+                                                  onPressed: isButtonEnabled
+                                                      ? () => Navigator.pop(
                                                             context,
                                                             controller.text,
                                                           )
-                                                          : null,
+                                                      : null,
                                                   child: Text('Save'),
                                                 ),
                                               ],
@@ -281,14 +339,12 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.delete, size: 20),
-                                  onPressed:
-                                      () => goalsProvider.removeGoal(
-                                        widget.username,
-                                        widget.dashboard.title,
-                                        i,
-                                      ),
+                                  onPressed: () => goalsProvider.removeGoal(
+                                    widget.username,
+                                    widget.dashboard.title,
+                                    i,
+                                  ),
                                 ),
-                                // Icon(Icons.drag_handle),
                               ],
                             ),
                           ),

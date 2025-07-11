@@ -108,31 +108,42 @@ class UserProvider extends ChangeNotifier {
 }
 
 class GoalsProvider extends ChangeNotifier {
-  Map<String, Map<String, List<String>>> userGoals = {
+  Map<String, Map<String, List<Map<String, dynamic>>>> userGoals = {
     'admin': {
-      'IF-B CLASS': ['Goal 1', 'Goal 2', 'Goal 3'],
+      'IF-B CLASS': [
+        {'title': 'Goal 1', 'done': false},
+        {'title': 'Goal 2', 'done': false},
+        {'title': 'Goal 3', 'done': false},
+      ],
     },
   };
 
-  List<String> getGoals(String username, String dashboardTitle) {
+  List<Map<String, dynamic>> getGoals(String username, String dashboardTitle) {
     return userGoals[username]?[dashboardTitle] ?? [];
   }
 
   void addGoal(String username, String dashboardTitle, String goal) {
     userGoals[username] ??= {};
     userGoals[username]![dashboardTitle] ??= [];
-    userGoals[username]![dashboardTitle]!.add(goal);
+    userGoals[username]![dashboardTitle]!
+        .add({'title': goal, 'done': false});
     notifyListeners();
   }
 
-  void editGoal(
-    String username,
-    String dashboardTitle,
-    int index,
-    String newGoal,
-  ) {
-    userGoals[username]?[dashboardTitle]?[index] = newGoal;
-    notifyListeners();
+  void toggleGoalStatus(String username, String dashboardTitle, int index) {
+    final goal = userGoals[username]?[dashboardTitle]?[index];
+    if (goal != null) {
+      goal['done'] = !(goal['done'] ?? false);
+      notifyListeners();
+    }
+  }
+
+  void editGoal(String username, String dashboardTitle, int index, String newGoal) {
+    final goal = userGoals[username]?[dashboardTitle]?[index];
+    if (goal != null) {
+      goal['title'] = newGoal;
+      notifyListeners();
+    }
   }
 
   void removeGoal(String username, String dashboardTitle, int index) {
@@ -140,12 +151,7 @@ class GoalsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reorderGoals(
-    String username,
-    String dashboardTitle,
-    int oldIndex,
-    int newIndex,
-  ) {
+  void reorderGoals(String username, String dashboardTitle, int oldIndex, int newIndex) {
     final goals = userGoals[username]?[dashboardTitle];
     if (goals != null) {
       if (newIndex > oldIndex) newIndex -= 1;
