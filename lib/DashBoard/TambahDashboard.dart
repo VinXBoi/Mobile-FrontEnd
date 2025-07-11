@@ -1,5 +1,6 @@
 import 'package:activity_tracker/main.dart';
 import 'package:flutter/material.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class TambahDashboard extends StatefulWidget {
   final String username;
@@ -78,9 +79,16 @@ class _TambahDashboardState extends State<TambahDashboard> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Icon(Icons.add_photo_alternate_outlined, size: 32, color: Colors.blue),
+                      Icon(
+                        Icons.add_photo_alternate_outlined,
+                        size: 32,
+                        color: Colors.blue,
+                      ),
                       SizedBox(height: 6),
-                      Text("Add Image or Icon", style: TextStyle(color: Colors.blue)),
+                      Text(
+                        "Add Image or Icon",
+                        style: TextStyle(color: Colors.blue),
+                      ),
                     ],
                   ),
                 ),
@@ -105,10 +113,42 @@ class _TambahDashboardState extends State<TambahDashboard> {
                 prefixIcon: Icon(Icons.notes),
               ),
             ),
-            SizedBox(height: 20,),
-            TextButton(onPressed: (){
-              if(_controller.text.isNotEmpty) {
-                Navigator.pop(context, DashboardProvider(title: _controller.text, icon: Icons.edit));
+            SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                if (_controller.text.isEmpty) {
+                  showTopSnackBar(
+                    Overlay.of(context),
+                    Material(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.redAccent,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: const [
+                            // Icon(Icons.warning, color: Colors.white),
+                            SizedBox(width: 12, height: 10),
+                            Expanded(
+                              child: Text(
+                                "Title Tidak Boleh Kosong",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                  return;
+                }
+
+                Navigator.pop(
+                  context,
+                  DashboardProvider(title: _controller.text, icon: Icons.edit),
+                );
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -117,8 +157,9 @@ class _TambahDashboardState extends State<TambahDashboard> {
                     ),
                   );
                 });
-              }
-            }, child: Text('Simpan'),)
+              },
+              child: Text('Simpan'),
+            ),
           ],
         ),
       ),
